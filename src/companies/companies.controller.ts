@@ -78,7 +78,7 @@ export class CompaniesController {
   @Post(':id/upload-logo')
   @UseInterceptors(FileInterceptor('file', { storage: storage_options }))
   async uploadLogoImageFile(
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile('file') file: Express.Multer.File,
     @Param('id') id: string,
   ): Promise<any> {
     return await this.companiesService.uploadLogo(file, id);

@@ -6,6 +6,7 @@ import { UpdateNewsDto } from './dto/update-newst.dto';
 import { News } from './entities/news.entitiy';
 import * as cloudinary from 'cloudinary';
 import { NewsFilterDto } from 'tools/dtos/news-filter.dto';
+const fs = require('fs');
 
 @Injectable()
 export class NewsService {
@@ -98,6 +99,7 @@ export class NewsService {
             return response;
           },
         );
+        fs.unlinkSync(file.path);
         return await this.updateImage(
           id,
           cloudResponse.url,
@@ -114,6 +116,7 @@ export class NewsService {
             return response;
           },
         );
+        fs.unlinkSync(file.path);
         return await this.updateImage(
           id,
           cloudResponse.url,
