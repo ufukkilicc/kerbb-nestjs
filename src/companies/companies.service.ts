@@ -7,6 +7,7 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { Company } from './entities/company.entitiy';
 import * as cloudinary from 'cloudinary';
+const fs = require('fs');
 
 @Injectable()
 export class CompaniesService {
@@ -35,7 +36,6 @@ export class CompaniesService {
   };
   async findAll(query?: CompanyFilterDto) {
     const searchValue = await { ...this.generalSearchQuery, ...query };
-    console.log(searchValue);
     const userRegex = new RegExp(searchValue.query_text, 'i');
     if (Object.keys(query).length !== 0) {
       if (searchValue.is_highlighted) {
@@ -257,6 +257,7 @@ export class CompaniesService {
             return response;
           },
         );
+        fs.unlinkSync(file.path);
         return await this.updateLogoImage(
           id,
           cloudResponse.url,
@@ -273,6 +274,7 @@ export class CompaniesService {
             return response;
           },
         );
+        fs.unlinkSync(file.path);
         return await this.updateLogoImage(
           id,
           cloudResponse.url,
@@ -300,7 +302,8 @@ export class CompaniesService {
             return response;
           },
         );
-        return await this.updateLogoImage(
+        fs.unlinkSync(file.path);
+        return await this.updateCoverImage(
           id,
           cloudResponse.url,
           cloudResponse.public_id,
@@ -316,6 +319,7 @@ export class CompaniesService {
             return response;
           },
         );
+        fs.unlinkSync(file.path);
         return await this.updateCoverImage(
           id,
           cloudResponse.url,
