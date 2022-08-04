@@ -35,9 +35,10 @@ export class UsersService {
     }
     return user;
   }
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto) {
     const user = new this.userModel(createUserDto);
-    return user.save();
+    await user.save();
+    return user.populate('user_roles');
   }
   async update(id: string, updateUserDto: UpdateUserDto) {
     const existingUser = await this.userModel

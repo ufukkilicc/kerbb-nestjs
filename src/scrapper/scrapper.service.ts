@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { ScrapperHelperService } from 'src/common/helpers/scrapper-helper.service';
+import { ScrapperHelperService } from 'src/common/helpers/scrapper/scrapper-helper.service';
 import { CompaniesService } from 'src/companies/companies.service';
 import { JobsService } from 'src/jobs/jobs.service';
 import { NewsService } from 'src/news/news.service';

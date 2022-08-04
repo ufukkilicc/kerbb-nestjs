@@ -5,17 +5,40 @@ import { CreateNewstDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-newst.dto';
 import { News } from './entities/news.entitiy';
 import * as cloudinary from 'cloudinary';
+import { NewsFilterDto } from 'tools/dtos/news-filter.dto';
 
 @Injectable()
 export class NewsService {
   constructor(
     @InjectModel(News.name) private readonly newsModel: Model<News>,
   ) {}
-  findAll() {
-    return this.newsModel
-      .find()
-      .populate({ path: 'news_tags', populate: { path: 'tag_type' } })
-      .exec();
+  generalSearchQuery = {
+    page: 1,
+    size: 10,
+    sort: 'ASC',
+    sort_by: 'news_date',
+  };
+  async findAll(query?: NewsFilterDto) {
+    if (Object.keys(query).length !== 0) {
+      const searchValue = await { ...this.generalSearchQuery, ...query };
+      return this.newsModel
+        .find()
+        .limit(Math.max(0, searchValue.size))
+        .skip(searchValue.size * (searchValue.page - 1))
+        .sort([[`${searchValue.sort_by}`, searchValue.sort]])
+        .populate({ path: 'news_tags', populate: { path: 'tag_type' } })
+        .exec();
+    } else {
+      return this.newsModel
+        .find()
+        .limit(Math.max(0, this.generalSearchQuery.size))
+        .skip(this.generalSearchQuery.size * (this.generalSearchQuery.page - 1))
+        .sort([
+          [`${this.generalSearchQuery.sort_by}`, this.generalSearchQuery.sort],
+        ])
+        .populate({ path: 'news_tags', populate: { path: 'tag_type' } })
+        .exec();
+    }
   }
   async findOne(id: string) {
     const news = await this.newsModel
@@ -34,6 +57,16 @@ export class NewsService {
   async update(id: string, updateNewsDto: UpdateNewsDto) {
     const existingNews = await this.newsModel
       .findOneAndUpdate({ _id: id }, { $set: updateNewsDto }, { new: true })
+      .exec();
+
+    if (!existingNews) {
+      throw new NotFoundException(`News ${id} was not found`);
+    }
+    return existingNews;
+  }
+  async incrementView(id: string) {
+    const existingNews = await this.newsModel
+      .findOneAndUpdate({ _id: id }, { $inc: { news_views: 1 } }, { new: true })
       .exec();
 
     if (!existingNews) {

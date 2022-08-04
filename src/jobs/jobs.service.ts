@@ -26,7 +26,6 @@ export class JobsService {
     search_scrape_by: 'scrape_name',
   };
   async findAll(query?: FilterDto) {
-    console.log({ query });
     if (Object.keys(query).length !== 0) {
       const searchValue = await { ...this.generalSearchQuery, ...query };
       const userRegex = new RegExp(searchValue.query_text, 'i');

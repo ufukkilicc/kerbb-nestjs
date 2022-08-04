@@ -75,31 +75,20 @@ export class CompaniesController {
     return this.companiesService.removeAll();
   }
 
-  @Post(':id/upload')
+  @Post(':id/upload-logo')
   @UseInterceptors(FileInterceptor('file', { storage: storage_options }))
-  async uploadFile(
+  async uploadLogoImageFile(
     @UploadedFile() file: Express.Multer.File,
     @Param('id') id: string,
   ): Promise<any> {
-    return await this.companiesService.upload(file, id);
+    return await this.companiesService.uploadLogo(file, id);
   }
-  // @Get(':id/download')
-  // async downloadFile(
-  //   @Res() res: Response,
-  //   @Param('id') id: string,
-  // ): Promise<any> {
-  //   const company = await this.findOne(id);
-  //   if (company.image) {
-  //     return of(
-  //       res.sendFile(
-  //         join(process.cwd(), './upload/companies/' + company.image),
-  //       ),
-  //     );
-  //   } else {
-  //     return res.json({
-  //       success: false,
-  //       message: 'This company has no image',
-  //     });
-  //   }
-  // }
+  @Post(':id/upload-cover')
+  @UseInterceptors(FileInterceptor('file', { storage: storage_options }))
+  async uploadCoverImageFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Param('id') id: string,
+  ): Promise<any> {
+    return await this.companiesService.uploadCover(file, id);
+  }
 }

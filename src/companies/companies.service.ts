@@ -35,6 +35,7 @@ export class CompaniesService {
   };
   async findAll(query?: CompanyFilterDto) {
     const searchValue = await { ...this.generalSearchQuery, ...query };
+    console.log(searchValue);
     const userRegex = new RegExp(searchValue.query_text, 'i');
     if (Object.keys(query).length !== 0) {
       if (searchValue.is_highlighted) {
@@ -140,7 +141,9 @@ export class CompaniesService {
               },
             ],
           })
-          .sort(`${searchValue.sort_by}`)
+          .sort({
+            [searchValue.sort_by]: searchValue.sort === 'ASC' ? 'asc' : 'desc',
+          })
           .skip(searchValue.size * (searchValue.page - 1))
           .limit(Math.max(0, searchValue.size))
           .lookup({
@@ -237,13 +240,13 @@ export class CompaniesService {
   async removeAll(): Promise<any> {
     return await this.companyModel.deleteMany({}).exec();
   }
-  async upload(file: any, id: string): Promise<any> {
+  async uploadLogo(file: any, id: string): Promise<any> {
     const company = await this.findOne(id);
     let result;
-    if (company.image_url !== '') {
+    if (company.logo_image_url !== '') {
       try {
         const cloudDeleteResponse = await cloudinary.v2.uploader.destroy(
-          company.image_public_id,
+          company.logo_image_public_id,
           function (error, response) {
             return response;
           },
@@ -254,7 +257,7 @@ export class CompaniesService {
             return response;
           },
         );
-        return await this.updateImage(
+        return await this.updateLogoImage(
           id,
           cloudResponse.url,
           cloudResponse.public_id,
@@ -270,7 +273,7 @@ export class CompaniesService {
             return response;
           },
         );
-        return await this.updateImage(
+        return await this.updateLogoImage(
           id,
           cloudResponse.url,
           cloudResponse.public_id,
@@ -279,26 +282,64 @@ export class CompaniesService {
         return await ex;
       }
     }
-    // let result;
-    // try {
-    //   await cloudinary.v2.uploader.upload(
-    //     file.path,
-    //     function (error, response) {
-    //       result = response;
-    //       return response;
-    //     },
-    //   );
-    //   console.log(result);
-    //   return await result;
-    // } catch (ex) {
-    //   return await ex;
-    // }
   }
-  async updateImage(id: string, imageUrl: string, publicId: string) {
+  async uploadCover(file: any, id: string): Promise<any> {
+    const company = await this.findOne(id);
+    let result;
+    if (company.cover_image_url !== '') {
+      try {
+        const cloudDeleteResponse = await cloudinary.v2.uploader.destroy(
+          company.cover_image_public_id,
+          function (error, response) {
+            return response;
+          },
+        );
+        const cloudResponse = await cloudinary.v2.uploader.upload(
+          file.path,
+          function (error, response) {
+            return response;
+          },
+        );
+        return await this.updateLogoImage(
+          id,
+          cloudResponse.url,
+          cloudResponse.public_id,
+        );
+      } catch (ex) {
+        return await ex;
+      }
+    } else {
+      try {
+        const cloudResponse = await cloudinary.v2.uploader.upload(
+          file.path,
+          function (error, response) {
+            return response;
+          },
+        );
+        return await this.updateCoverImage(
+          id,
+          cloudResponse.url,
+          cloudResponse.public_id,
+        );
+      } catch (ex) {
+        return await ex;
+      }
+    }
+  }
+  async updateLogoImage(id: string, imageUrl: string, publicId: string) {
     return await this.companyModel
       .findByIdAndUpdate(
         { _id: id },
-        { image_url: imageUrl, image_public_id: publicId },
+        { logo_image_url: imageUrl, logo_image_public_id: publicId },
+        { new: true },
+      )
+      .exec();
+  }
+  async updateCoverImage(id: string, imageUrl: string, publicId: string) {
+    return await this.companyModel
+      .findByIdAndUpdate(
+        { _id: id },
+        { cover_image_url: imageUrl, cover_image_public_id: publicId },
         { new: true },
       )
       .exec();
