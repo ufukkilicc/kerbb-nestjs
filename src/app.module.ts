@@ -3,7 +3,6 @@ import {
   Module,
   NestModule,
   RequestMethod,
-  ValidationPipe,
 } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -14,7 +13,6 @@ import { ScrapperModule } from './scrapper/scrapper.module';
 import { NewsModule } from './news/news.module';
 import { ConfigModule } from '@nestjs/config';
 import appConfig from './config/app.config';
-import { APP_PIPE } from '@nestjs/core';
 import { CommonModule } from './common/common.module';
 import { UsersModule } from './users/users.module';
 import { LibsModule } from 'libs/libs.module';
@@ -24,26 +22,22 @@ import { RoleModule } from './role/role.module';
 import { TotalModule } from './total/total.module';
 import { AuthModule } from './auth/auth.module';
 import { TokenMiddleware } from './common/middlwares/token.middleware';
-import { UploadService } from './upload/upload.service';
 import { UploadModule } from './upload/upload.module';
 import { MulterModule } from '@nestjs/platform-express';
-import { ScrapperHelperModule } from './common/helpers/scrapper-helper.module';
+import { ScrapperHelperModule } from './common/helpers/scrapper/scrapper-helper.module';
 import { TicketModule } from './ticket/ticket.module';
-import { TicketTypesController } from './ticket-types/ticket-types.controller';
-import { TicketTypesService } from './ticket-types/ticket-types.service';
 import { TicketTypesModule } from './ticket-types/ticket-types.module';
-import { TagsService } from './tags/tags.service';
-import { TagsController } from './tags/tags.controller';
 import { TagsModule } from './tags/tags.module';
-import { TagTypesService } from './tag-types/tag-types.service';
-import { TagTypesController } from './tag-types/tag-types.controller';
 import { TagTypesModule } from './tag-types/tag-types.module';
+import { ScheduleModule } from '@nestjs/schedule';
+import { TasksModule } from './common/helpers/tasks/tasksService.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [appConfig],
     }),
+    ScheduleModule.forRoot(),
     MongooseModule.forRoot(process.env.DATABASE_MONGO_URI),
     JobsModule,
     CompaniesModule,
@@ -67,6 +61,7 @@ import { TagTypesModule } from './tag-types/tag-types.module';
     TicketTypesModule,
     TagsModule,
     TagTypesModule,
+    TasksModule,
   ],
   controllers: [AppController],
   providers: [
@@ -88,9 +83,10 @@ export class AppModule implements NestModule {
         { path: 'companies/:id', method: RequestMethod.GET },
         { path: 'companies', method: RequestMethod.GET },
         { path: 'companies/:id/inc-view', method: RequestMethod.PATCH },
-        { path: 'companies/:id/download', method: RequestMethod.GET },
+        // { path: 'companies/:id/download', method: RequestMethod.GET },
         { path: 'news', method: RequestMethod.GET },
         { path: 'news/:id', method: RequestMethod.GET },
+        { path: 'news/:id/inc-view', method: RequestMethod.PATCH },
         { path: 'users', method: RequestMethod.GET },
         { path: 'users/:id', method: RequestMethod.GET },
         { path: 'scrapper', method: RequestMethod.GET },

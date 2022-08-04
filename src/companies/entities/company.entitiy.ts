@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { Tag } from 'src/tags/entities/tag.entitiy';
+import * as cloudinary from 'cloudinary';
 
 @Schema()
 export class Company extends Document {
@@ -43,9 +44,13 @@ export class Company extends Document {
   })
   date: Date;
   @Prop({ type: mongoose.Schema.Types.String, required: false, default: '' })
-  image_url: string;
+  logo_image_url: string;
   @Prop({ type: mongoose.Schema.Types.String, required: false, default: '' })
-  image_public_id: string;
+  logo_image_public_id: string;
+  @Prop({ type: mongoose.Schema.Types.String, required: false, default: '' })
+  cover_image_url: string;
+  @Prop({ type: mongoose.Schema.Types.String, required: false, default: '' })
+  cover_image_public_id: string;
 }
 
 export const CompanySchema = SchemaFactory.createForClass(Company);
@@ -70,5 +75,30 @@ CompanySchema.pre('save', async function (next) {
     .replace('ö', 'o')
     .replace('ç', 'c')
     .toLocaleLowerCase();
+  next();
+});
+CompanySchema.pre('remove', async function (next) {
+  var doc = this;
+  cloudinary.v2.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API_KEY,
+    api_secret: process.env.CLOUD_API_SECRET,
+  });
+  if (doc.logo_image_url !== '') {
+    const cloudDeleteResponse = await cloudinary.v2.uploader.destroy(
+      doc.logo_image_public_id,
+      function (error, response) {
+        return response;
+      },
+    );
+  }
+  if (doc.cover_image_url !== '') {
+    const cloudDeleteResponse = await cloudinary.v2.uploader.destroy(
+      doc.cover_image_public_id,
+      function (error, response) {
+        return response;
+      },
+    );
+  }
   next();
 });

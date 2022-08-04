@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Res,
   UploadedFile,
   UseInterceptors,
@@ -18,6 +19,7 @@ import { extname, join } from 'path';
 import { of } from 'rxjs';
 import { Public } from 'src/common/decorators/public.decorator';
 import { Roles } from 'src/common/decorators/role.decorator';
+import { NewsFilterDto } from 'tools/dtos/news-filter.dto';
 import { CreateNewstDto } from './dto/create-news.dto';
 import { UpdateNewsDto } from './dto/update-newst.dto';
 import { NewsService } from './news.service';
@@ -34,8 +36,8 @@ const storage_options = diskStorage({
 export class NewsController {
   constructor(private readonly newsService: NewsService) {}
   @Get()
-  findAll() {
-    return this.newsService.findAll();
+  findAll(@Query() query: NewsFilterDto) {
+    return this.newsService.findAll(query);
   }
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -50,6 +52,10 @@ export class NewsController {
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateNewsDto: UpdateNewsDto) {
     return this.newsService.update(id, updateNewsDto);
+  }
+  @Patch(':id/inc-view')
+  incrementView(@Param('id') id: string) {
+    return this.newsService.incrementView(id);
   }
   @Roles('Admin', 'Developer')
   @Delete(':id')

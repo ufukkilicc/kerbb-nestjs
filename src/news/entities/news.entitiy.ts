@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document } from 'mongoose';
 import { Tag } from 'src/tags/entities/tag.entitiy';
+import * as cloudinary from 'cloudinary';
 
 @Schema()
 export class News extends Document {
@@ -12,6 +13,8 @@ export class News extends Document {
   tracking_id: number;
   @Prop({ type: mongoose.Schema.Types.String, required: true })
   news_title: string;
+  @Prop({ type: mongoose.Schema.Types.Number, required: false, default: 0 })
+  news_views: Number;
   @Prop({
     type: mongoose.Schema.Types.Date,
     required: false,
@@ -39,5 +42,22 @@ NewsSchema.pre('save', async function (next) {
   var doc = this;
   const docCount = await doc.collection.countDocuments();
   doc.tracking_id = docCount + 1;
+  next();
+});
+NewsSchema.pre('remove', async function (next) {
+  var doc = this;
+  cloudinary.v2.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API_KEY,
+    api_secret: process.env.CLOUD_API_SECRET,
+  });
+  if (doc.image_url !== '') {
+    const cloudDeleteResponse = await cloudinary.v2.uploader.destroy(
+      doc.image_public_id,
+      function (error, response) {
+        return response;
+      },
+    );
+  }
   next();
 });
