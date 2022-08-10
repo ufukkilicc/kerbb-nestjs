@@ -3,6 +3,13 @@ const puppeteer = require('puppeteer');
 export const unilever = async () => {
   const browser = await puppeteer.launch({
     headless: true,
+    executablePath: '/usr/bin/chromium-browser',
+    args: [
+      '--no-sandbox',
+      '--headless',
+      '--disable-gpu',
+      '--disable-dev-shm-usage'
+    ],
     defaultViewport: false,
     userDataDir: './tmp',
   });
