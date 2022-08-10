@@ -2,7 +2,14 @@ const puppeteer = require('puppeteer');
 
 export const siemens = async () => {
   const browser = await puppeteer.launch({
-    headless: false,
+    executablePath: '/usr/bin/chromium-browser',
+    args: [
+      '--no-sandbox',
+      '--headless',
+      '--disable-gpu',
+      '--disable-dev-shm-usage',
+    ],
+    headless: true,
     defaultViewport: false,
     userDataDir: './tmp',
   });

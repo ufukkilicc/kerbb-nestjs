@@ -22,6 +22,6 @@ async function bootstrap() {
   // app.useGlobalGuards(new ApiKeyGuard()); Doesnt needed anymore
   // app.useGlobalInterceptors(new WrapResponseInterceptor(), new TimeoutInterceptor());
   app.enableCors();
-  await app.listen(3030);
+  await app.listen(5000);
 }
 bootstrap();

@@ -95,6 +95,7 @@ export class ScrapperService {
     };
   }
   async scrapeOne(companyName: string, scrapeAll: boolean) {
+    console.log(companyName);
     if (!scrapeAll) {
       const generalSearchQuery = {
         page: 1,
@@ -107,7 +108,9 @@ export class ScrapperService {
       };
       const scrapperArray = await this.findAll(generalSearchQuery);
       const scrapper = scrapperArray[0];
-      const scrapperDeleteResponse = await this.remove(scrapper._id);
+      if (scrapper != undefined) {
+        const scrapperDeleteResponse = await this.remove(scrapper._id);
+      }
     }
     switch (companyName) {
       case 'getir':

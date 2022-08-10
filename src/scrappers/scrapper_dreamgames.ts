@@ -3,6 +3,13 @@ const fs = require('fs');
 
 export const dreamgames = async () => {
   const browser = await puppeteer.launch({
+    executablePath: '/usr/bin/chromium-browser',
+    args: [
+      '--no-sandbox',
+      '--headless',
+      '--disable-gpu',
+      '--disable-dev-shm-usage',
+    ],
     headless: true,
     defaultViewport: false,
     userDataDir: './tmp',
