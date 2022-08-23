@@ -32,7 +32,7 @@ export const dreamgames = async () => {
     jobs.push({
       job_link,
       job_title,
-      job_location: 'Turkey',
+      job_location: 'Türkiye',
       company: 'Dream Games',
     });
   }

@@ -252,7 +252,9 @@ export class CompaniesService {
           },
         );
         const cloudResponse = await cloudinary.v2.uploader.upload(
-          file.path,
+          file.path,{
+            folder: 'local/company_logos'
+          },
           function (error, response) {
             return response;
           },
@@ -269,7 +271,9 @@ export class CompaniesService {
     } else {
       try {
         const cloudResponse = await cloudinary.v2.uploader.upload(
-          file.path,
+          file.path,{
+            folder: 'local/company_logos'
+          },
           function (error, response) {
             return response;
           },
@@ -297,7 +301,9 @@ export class CompaniesService {
           },
         );
         const cloudResponse = await cloudinary.v2.uploader.upload(
-          file.path,
+          file.path,{
+            folder: 'local/company_covers'
+          },
           function (error, response) {
             return response;
           },
@@ -314,7 +320,9 @@ export class CompaniesService {
     } else {
       try {
         const cloudResponse = await cloudinary.v2.uploader.upload(
-          file.path,
+          file.path,{
+            folder: 'local/company_covers'
+          },
           function (error, response) {
             return response;
           },

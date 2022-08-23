@@ -94,7 +94,9 @@ export class NewsService {
           },
         );
         const cloudResponse = await cloudinary.v2.uploader.upload(
-          file.path,
+          file.path,{
+            folder: 'local/news_thumbnails'
+          },
           function (error, response) {
             return response;
           },
@@ -111,7 +113,9 @@ export class NewsService {
     } else {
       try {
         const cloudResponse = await cloudinary.v2.uploader.upload(
-          file.path,
+          file.path,{
+            folder: 'local/news_thumbnails'
+          },
           function (error, response) {
             return response;
           },
