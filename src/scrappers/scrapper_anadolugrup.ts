@@ -48,7 +48,10 @@ export const anadolugrup = async () => {
     jobs.push({
       job_link,
       job_title,
-      job_location: 'Turkey',
+      job_location: 
+      job_location
+      .replace("TR", "Türkiye")
+      .replace("(Anadolu)", "Anadolu"),
       company: 'Anadolu Grup',
     });
   }

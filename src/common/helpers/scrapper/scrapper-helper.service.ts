@@ -34,28 +34,8 @@ export class ScrapperHelperService {
     this.start_date = new Date();
     this.start_time = new Date().getTime();
     try {
-      this.jobs = await callback();
-      this.success = true;
-    } catch (error) {
-      console.log(error);
-      this.success = false;
-      this.error_message = `${error}`;
-      const createScrapperDto: CreateScrapperDto = {
-        scrapper_title: this.title,
-        scrapper_company: new Company(),
-        scrapper_success: this.success,
-        scrapper_error_message: this.error_message,
-        scrapper_start_date: undefined,
-        scrapper_end_date: undefined,
-        scrapper_time_lasts: undefined,
-        scrapper_jobs_found: undefined,
-        scrapper_jobs_added_count: undefined,
-        scrapper_jobs_added: [],
-        scrapper_jobs_extracted_count: undefined,
-        scrapper_jobs_extracted: [],
-      };
-      return createScrapperDto;
-    }
+    this.jobs = await callback();
+    this.success = true;
     this.jobs_found = this.jobs.length;
     this.end_date = new Date();
     this.end_time = new Date().getTime();
@@ -117,5 +97,25 @@ export class ScrapperHelperService {
       scrapper_jobs_extracted: this.jobs_extracted,
     };
     return createScrapperDto;
+    } catch (error) {
+      this.success = false;
+      this.error_message = `${error}`;
+      const createScrapperDto: CreateScrapperDto = {
+        scrapper_title: this.title,
+        scrapper_company: undefined,
+        scrapper_success: this.success,
+        scrapper_error_message: this.error_message,
+        scrapper_start_date: undefined,
+        scrapper_end_date: undefined,
+        scrapper_time_lasts: undefined,
+        scrapper_jobs_found: undefined,
+        scrapper_jobs_added_count: undefined,
+        scrapper_jobs_added: [],
+        scrapper_jobs_extracted_count: undefined,
+        scrapper_jobs_extracted: [],
+      };
+      return createScrapperDto;
+    }
+    
   }
 }

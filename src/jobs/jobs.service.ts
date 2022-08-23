@@ -48,9 +48,9 @@ export class JobsService {
           },
           { [searchValue.search_location_by]: locationRegex },
         ])
+        .sort({[searchValue.sort_by]: searchValue.sort === 'ASC' ? 'asc' : 'desc',})
         .limit(Math.max(0, searchValue.size))
         .skip(searchValue.size * (searchValue.page - 1))
-        .sort([[`${searchValue.sort_by}`, searchValue.sort]])
         .populate([{ path: 'job_tags', populate: 'tag_type' }])
         .populate('job_company')
         .exec();

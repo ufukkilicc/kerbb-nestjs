@@ -46,7 +46,9 @@ export const turkcell = async () => {
     jobs.push({
       job_link,
       job_title,
-      job_location,
+      job_location:
+      job_location.toLowerCase().charAt(0).toUpperCase() +
+      job_location.toLowerCase().slice(1),
       company: 'Turkcell',
     });
   }
