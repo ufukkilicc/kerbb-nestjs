@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -24,36 +28,72 @@ export class JobsService {
     search_location_by: 'job_location',
     search_company_by: 'company',
     search_scrape_by: 'scrape_name',
+    is_highlighted: false,
+    search_highlighted_by: 'is_highlighted',
   };
   async findAll(query?: FilterDto) {
     if (Object.keys(query).length !== 0) {
       const searchValue = await { ...this.generalSearchQuery, ...query };
       const userRegex = new RegExp(searchValue.query_text, 'i');
       const locationRegex = new RegExp(searchValue.location_query_text, 'i');
-      return await this.jobModel
-        .find({})
-        .and([
-          {
-            $or: [
-              {
-                [searchValue.search_title_by]: userRegex,
-              },
-              {
-                [searchValue.search_company_by]: userRegex,
-              },
-              {
-                [searchValue.search_scrape_by]: userRegex,
-              },
-            ],
-          },
-          { [searchValue.search_location_by]: locationRegex },
-        ])
-        .sort({[searchValue.sort_by]: searchValue.sort === 'ASC' ? 'asc' : 'desc',})
-        .limit(Math.max(0, searchValue.size))
-        .skip(searchValue.size * (searchValue.page - 1))
-        .populate([{ path: 'job_tags', populate: 'tag_type' }])
-        .populate('job_company')
-        .exec();
+      if (searchValue.is_highlighted) {
+        return await this.jobModel
+          .find({})
+          .and([
+            {
+              $or: [
+                {
+                  [searchValue.search_title_by]: userRegex,
+                },
+                {
+                  [searchValue.search_company_by]: userRegex,
+                },
+                {
+                  [searchValue.search_scrape_by]: userRegex,
+                },
+              ],
+            },
+            { [searchValue.search_location_by]: locationRegex },
+            {
+              [searchValue.search_highlighted_by]: searchValue.is_highlighted,
+            },
+          ])
+          .sort({
+            [searchValue.sort_by]: searchValue.sort === 'ASC' ? 'asc' : 'desc',
+          })
+          .limit(Math.max(0, searchValue.size))
+          .skip(searchValue.size * (searchValue.page - 1))
+          .populate([{ path: 'job_tags', populate: 'tag_type' }])
+          .populate('job_company')
+          .exec();
+      } else {
+        return await this.jobModel
+          .find({})
+          .and([
+            {
+              $or: [
+                {
+                  [searchValue.search_title_by]: userRegex,
+                },
+                {
+                  [searchValue.search_company_by]: userRegex,
+                },
+                {
+                  [searchValue.search_scrape_by]: userRegex,
+                },
+              ],
+            },
+            { [searchValue.search_location_by]: locationRegex },
+          ])
+          .sort({
+            [searchValue.sort_by]: searchValue.sort === 'ASC' ? 'asc' : 'desc',
+          })
+          .limit(Math.max(0, searchValue.size))
+          .skip(searchValue.size * (searchValue.page - 1))
+          .populate([{ path: 'job_tags', populate: 'tag_type' }])
+          .populate('job_company')
+          .exec();
+      }
     } else {
       return await this.jobModel
         .find({})
@@ -103,6 +143,45 @@ export class JobsService {
   async incrementView(id: string) {
     const existingJob = await this.jobModel
       .findOneAndUpdate({ _id: id }, { $inc: { job_views: 1 } }, { new: true })
+      .exec();
+
+    if (!existingJob) {
+      throw new NotFoundException(`Job ${id} was not found`);
+    }
+    return existingJob;
+  }
+  async highlightJob(id: string) {
+    const job = await this.findOne(id);
+    const existingJob = await this.jobModel
+      .findOneAndUpdate(
+        { _id: id },
+        { $set: { is_highlighted: !job.is_highlighted } },
+        { new: true },
+      )
+      .populate([{ path: 'job_tags', populate: 'tag_type' }])
+      .populate('job_company')
+      .exec();
+
+    if (!existingJob) {
+      throw new NotFoundException(`Job ${id} was not found`);
+    }
+    return existingJob;
+  }
+  async highlightOrderJob(id: string, highlight_order: number) {
+    const job = await this.findOne(id);
+    if (!job.is_highlighted) {
+      throw new BadRequestException(
+        `Company ${id} highlight order can not be setted if it's not highlighted`,
+      );
+    }
+    const existingJob = await this.jobModel
+      .findOneAndUpdate(
+        { _id: id },
+        { $set: { highlight_order: highlight_order } },
+        { new: true },
+      )
+      .populate([{ path: 'job_tags', populate: 'tag_type' }])
+      .populate('job_company')
       .exec();
 
     if (!existingJob) {

@@ -12,7 +12,7 @@ export class Company extends Document {
   })
   tracking_id: number;
   @Prop({ type: mongoose.Schema.Types.String, required: true }) name: string;
-  @Prop({ type: mongoose.Schema.Types.String, required: false })
+  @Prop({ type: mongoose.Schema.Types.String, required: true })
   scrape_name: string;
   @Prop({ type: mongoose.Schema.Types.Number, required: false, default: 0 })
   job_count: number;
@@ -23,11 +23,24 @@ export class Company extends Document {
   })
   is_highlighted: boolean;
   @Prop({
+    type: mongoose.Schema.Types.Number,
+    required: false,
+    default: null,
+    unique: false,
+  })
+  highlight_order: number;
+  @Prop({
     type: mongoose.Schema.Types.Boolean,
     required: false,
     default: false,
   })
   is_active: boolean;
+  @Prop({
+    type: mongoose.Schema.Types.Boolean,
+    required: false,
+    default: false,
+  })
+  is_approved: boolean;
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
     ref: Tag.name,
@@ -59,22 +72,22 @@ CompanySchema.pre('save', async function (next) {
   var doc = this;
   const docCount = await doc.collection.countDocuments();
   doc.tracking_id = docCount + 1;
-  this.scrape_name = this.name
-    .replace(/\s/g, '')
-    .replace('Ğ', 'g')
-    .replace('Ü', 'u')
-    .replace('Ş', 's')
-    .replace('İ', 'i')
-    .replace('I', 'i')
-    .replace('Ö', 'o')
-    .replace('Ç', 'c')
-    .replace('ğ', 'g')
-    .replace('ü', 'u')
-    .replace('ş', 's')
-    .replace('ı', 'i')
-    .replace('ö', 'o')
-    .replace('ç', 'c')
-    .toLocaleLowerCase();
+  // this.scrape_name = this.name
+  //   .replace(/\s/g, '')
+  //   .replace('Ğ', 'g')
+  //   .replace('Ü', 'u')
+  //   .replace('Ş', 's')
+  //   .replace('İ', 'i')
+  //   .replace('I', 'i')
+  //   .replace('Ö', 'o')
+  //   .replace('Ç', 'c')
+  //   .replace('ğ', 'g')
+  //   .replace('ü', 'u')
+  //   .replace('ş', 's')
+  //   .replace('ı', 'i')
+  //   .replace('ö', 'o')
+  //   .replace('ç', 'c')
+  //   .toLocaleLowerCase();
   next();
 });
 CompanySchema.pre('remove', async function (next) {

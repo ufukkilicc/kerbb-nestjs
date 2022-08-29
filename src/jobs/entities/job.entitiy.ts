@@ -40,6 +40,19 @@ export class Job extends Document {
     default: false,
   })
   is_approved: boolean;
+  @Prop({
+    type: mongoose.Schema.Types.Boolean,
+    required: false,
+    default: false,
+  })
+  is_highlighted: boolean;
+  @Prop({
+    type: mongoose.Schema.Types.Number,
+    required: false,
+    default: null,
+    unique: false,
+  })
+  highlight_order: number;
   @Prop({ type: mongoose.Schema.Types.Number, required: false, default: 0 })
   job_views: Number;
   @Prop({

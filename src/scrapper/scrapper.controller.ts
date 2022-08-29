@@ -34,7 +34,7 @@ export class ScrapperController {
     return this.scrapperService.findAll(query);
   }
   @Roles('Admin')
-  @Get(':id')
+  @Get('/one/:id')
   findOne(@Param('id') id: string) {
     return this.scrapperService.findOne(id);
   }

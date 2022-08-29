@@ -24,6 +24,9 @@ export class CreateJobDto {
   @IsString()
   readonly scrape_name: string;
   @IsOptional()
+  @IsBoolean()
+  readonly is_highlighted: boolean;
+  @IsOptional()
   @IsArray()
   readonly job_tags: ObjectId[];
 }

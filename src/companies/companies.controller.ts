@@ -56,10 +56,25 @@ export class CompaniesController {
   incrementView(@Param('id') id: string) {
     return this.companiesService.incrementView(id);
   }
+  @Roles('Admin')
+  @Patch(':id/approve-refuse')
+  approveCompany(@Param('id') id: string) {
+    return this.companiesService.approveCompany(id);
+  }
+  @Roles('Admin')
   @Patch(':id/highlight')
   highlightCompany(@Param('id') id: string) {
     return this.companiesService.highlightCompany(id);
   }
+  @Roles('Admin')
+  @Patch(':id/highlight-order')
+  highlightOrderCompany(
+    @Param('id') id: string,
+    @Body('highlight_order') highlightOrder,
+  ) {
+    return this.companiesService.highlightOrderCompany(id, highlightOrder);
+  }
+  @Roles('Admin')
   @Patch(':id/activate-deactivate')
   activateCompany(@Param('id') id: string) {
     return this.companiesService.activateCompany(id);

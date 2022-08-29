@@ -12,7 +12,6 @@ export class HttpExceptionFilter<T extends HttpException>
   implements ExceptionFilter
 {
   catch(exception: T, host: ArgumentsHost) {
-    console.log('lalalalallalllalalala||||||||||||||||');
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const status = exception.getStatus();

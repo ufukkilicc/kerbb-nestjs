@@ -67,7 +67,7 @@ export class ScrapperHelperService {
         const job_added = new this.jobModel(job);
         job_added.job_company = company;
         await job_added.save();
-        this.jobs_added.push(job_added); // Does'nt work
+        this.jobs_added.push(job); // Does'nt work
       }
     }
     for (const job of this.current_jobs) {
@@ -100,9 +100,11 @@ export class ScrapperHelperService {
     } catch (error) {
       this.success = false;
       this.error_message = `${error}`;
+      const companies = await this.companyModel.find({ scrape_name: title });
+      const company = companies[0];
       const createScrapperDto: CreateScrapperDto = {
         scrapper_title: this.title,
-        scrapper_company: undefined,
+        scrapper_company: company,
         scrapper_success: this.success,
         scrapper_error_message: this.error_message,
         scrapper_start_date: undefined,
