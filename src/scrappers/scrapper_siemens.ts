@@ -31,7 +31,6 @@ export const siemens = async () => {
       await page.click("#onetrust-reject-all-handler");
       cookieDivClicked = true;
     }
-    
     await page.waitForSelector('.mat-accordion.cards');
     let jobCards = await page.$$('.mat-expansion-panel');
     for (const jbCard of jobCards) {

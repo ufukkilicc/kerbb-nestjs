@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { ResourceService } from 'libs/services/resource.service';
 import { Model } from 'mongoose';
@@ -7,12 +11,14 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { Company } from './entities/company.entitiy';
 import * as cloudinary from 'cloudinary';
+import { Job } from 'src/jobs/entities/job.entitiy';
 const fs = require('fs');
 
 @Injectable()
 export class CompaniesService {
   constructor(
     @InjectModel(Company.name) private readonly companyModel: Model<Company>,
+    @InjectModel(Job.name) private readonly jobModel: Model<Job>,
   ) {
     cloudinary.v2.config({
       cloud_name: process.env.CLOUD_NAME,
@@ -67,7 +73,9 @@ export class CompaniesService {
               },
             ],
           })
-          .sort(`${searchValue.sort_by}`)
+          .sort({
+            [searchValue.sort_by]: searchValue.sort === 'ASC' ? 'asc' : 'desc',
+          })
           .skip(searchValue.size * (searchValue.page - 1))
           .limit(Math.max(0, searchValue.size))
           .lookup({
@@ -204,10 +212,36 @@ export class CompaniesService {
   }
   async highlightCompany(id: string) {
     const company = await this.findOne(id);
+    if (!company.is_active && !company.is_highlighted) {
+      throw new BadRequestException(
+        `Company ${id} can not be highlighted if it's not active`,
+      );
+    }
     const existingCompany = await this.companyModel
       .findOneAndUpdate(
         { _id: id },
         { $set: { is_highlighted: !company.is_highlighted } },
+        { new: true },
+      )
+      .populate([{ path: 'company_tags', populate: 'tag_type' }])
+      .exec();
+
+    if (!existingCompany) {
+      throw new NotFoundException(`Company ${id} was not found`);
+    }
+    return existingCompany;
+  }
+  async highlightOrderCompany(id: string, highlight_order: number) {
+    const company = await this.findOne(id);
+    if (!company.is_active && !company.is_highlighted) {
+      throw new BadRequestException(
+        `Company ${id} highlight order can not be setted if it's not active`,
+      );
+    }
+    const existingCompany = await this.companyModel
+      .findOneAndUpdate(
+        { _id: id },
+        { $set: { highlight_order: highlight_order } },
         { new: true },
       )
       .populate([{ path: 'company_tags', populate: 'tag_type' }])
@@ -223,7 +257,25 @@ export class CompaniesService {
     const existingCompany = await this.companyModel
       .findOneAndUpdate(
         { _id: id },
-        { $set: { is_active: !company.is_active } },
+        { $set: { is_active: !company.is_active, is_highlighted: false } },
+        { new: true },
+      )
+      .exec();
+
+    if (!existingCompany) {
+      throw new NotFoundException(`Company ${id} was not found`);
+    }
+    if (company.is_active) {
+      await this.jobModel.deleteMany({ scrape_name: company.scrape_name });
+    }
+    return existingCompany;
+  }
+  async approveCompany(id: string) {
+    const company = await this.findOne(id);
+    const existingCompany = await this.companyModel
+      .findOneAndUpdate(
+        { _id: id },
+        { $set: { is_approved: !company.is_approved } },
         { new: true },
       )
       .exec();
@@ -235,6 +287,7 @@ export class CompaniesService {
   }
   async remove(id: string) {
     const company = await this.findOne(id);
+    await this.jobModel.deleteMany({ scrape_name: company.scrape_name });
     return company.remove();
   }
   async removeAll(): Promise<any> {
@@ -252,8 +305,9 @@ export class CompaniesService {
           },
         );
         const cloudResponse = await cloudinary.v2.uploader.upload(
-          file.path,{
-            folder: 'local/company_logos'
+          file.path,
+          {
+            folder: 'local/company_logos',
           },
           function (error, response) {
             return response;
@@ -271,8 +325,9 @@ export class CompaniesService {
     } else {
       try {
         const cloudResponse = await cloudinary.v2.uploader.upload(
-          file.path,{
-            folder: 'local/company_logos'
+          file.path,
+          {
+            folder: 'local/company_logos',
           },
           function (error, response) {
             return response;
@@ -301,8 +356,9 @@ export class CompaniesService {
           },
         );
         const cloudResponse = await cloudinary.v2.uploader.upload(
-          file.path,{
-            folder: 'local/company_covers'
+          file.path,
+          {
+            folder: 'local/company_covers',
           },
           function (error, response) {
             return response;
@@ -320,8 +376,9 @@ export class CompaniesService {
     } else {
       try {
         const cloudResponse = await cloudinary.v2.uploader.upload(
-          file.path,{
-            folder: 'local/company_covers'
+          file.path,
+          {
+            folder: 'local/company_covers',
           },
           function (error, response) {
             return response;

@@ -56,6 +56,19 @@ export class JobsController {
   approveJob(@Param('id') id: string) {
     return this.jobsService.approveJob(id);
   }
+  @Roles('Admin')
+  @Patch(':id/highlight')
+  highlightJob(@Param('id') id: string) {
+    return this.jobsService.highlightJob(id);
+  }
+  @Roles('Admin')
+  @Patch(':id/highlight-order')
+  highlightOrderJob(
+    @Param('id') id: string,
+    @Body('highlight_order') highlightOrder,
+  ) {
+    return this.jobsService.highlightOrderJob(id, highlightOrder);
+  }
   // @Patch(':id/dec-view')
   // decrementView(@Param('id') id: string) {
   //   return this.jobsService.decrementView(id);

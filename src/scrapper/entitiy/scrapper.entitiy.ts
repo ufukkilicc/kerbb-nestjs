@@ -28,7 +28,7 @@ export class Scrapper extends Document {
   @Prop({ type: mongoose.Schema.Types.Number, required: false, default: 0 })
   scrapper_jobs_added_count: number;
   @Prop({
-    type: [mongoose.Schema.Types.ObjectId],
+    type: mongoose.Schema.Types.Array,
     ref: Job.name,
     required: false,
   })

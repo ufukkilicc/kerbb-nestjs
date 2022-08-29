@@ -221,7 +221,7 @@ export class ScrapperService {
     }
   }
   async findOne(id: string) {
-    const scrapper = await this.scrapperModel.findOne({ _id: id }).exec();
+    const scrapper = await this.scrapperModel.findOne({ _id: id }).populate('scrapper_company').exec();
     if (!scrapper) {
       throw new NotFoundException(`Scrapper ${id} was not found`);
     }

@@ -1,4 +1,4 @@
-import { IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class FilterDto {
   @IsOptional()
@@ -31,4 +31,7 @@ export class FilterDto {
   @IsOptional()
   @IsString()
   search_scrape_by: string;
+  @IsOptional()
+  @IsBoolean()
+  is_highlighted: boolean;
 }
