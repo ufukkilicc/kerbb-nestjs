@@ -37,6 +37,7 @@ export const koluman = async () => {
       job_title,
       job_location: 'Türkiye',
       company: 'Koluman',
+      scrape_name: 'koluman',
     });
   }
   await browser.close();

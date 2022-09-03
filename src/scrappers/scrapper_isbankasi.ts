@@ -38,6 +38,7 @@ export const isbankasi = async () => {
       job_title,
       job_location: 'Türkiye',
       company: 'İş Bankası',
+      scrape_name: 'isbankasi',
     });
   }
   await browser.close();

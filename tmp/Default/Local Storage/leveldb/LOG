@@ -1,3 +1,3 @@
-2022/08/29-20:09:56.370 2e0 Reusing MANIFEST /usr/src/app/tmp/Default/Local Storage/leveldb/MANIFEST-000001
-2022/08/29-20:09:56.432 2e0 Recovering log #3
-2022/08/29-20:09:56.435 2e0 Reusing old log /usr/src/app/tmp/Default/Local Storage/leveldb/000003.log 
+2022/09/03-12:21:31.392 31e Reusing MANIFEST /usr/src/app/tmp/Default/Local Storage/leveldb/MANIFEST-000001
+2022/09/03-12:21:31.409 31e Recovering log #4
+2022/09/03-12:21:31.411 31e Reusing old log /usr/src/app/tmp/Default/Local Storage/leveldb/000004.log 

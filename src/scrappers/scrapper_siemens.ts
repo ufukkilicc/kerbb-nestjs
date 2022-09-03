@@ -26,9 +26,9 @@ export const siemens = async () => {
   let cookieDivClicked = false;
 
   while (!isBtnDisabled) {
-    let cookieDiv = (await page.$("#onetrust-banner-sdk")) !== null;
+    let cookieDiv = (await page.$('#onetrust-banner-sdk')) !== null;
     if (cookieDiv && !cookieDivClicked) {
-      await page.click("#onetrust-reject-all-handler");
+      await page.click('#onetrust-reject-all-handler');
       cookieDivClicked = true;
     }
     await page.waitForSelector('.mat-accordion.cards');
@@ -55,22 +55,23 @@ export const siemens = async () => {
         (el) =>
           el
             .querySelector(
-              ".mat-expansion-panel-header span.mat-content .mat-expansion-panel-header-description span.label-value"
+              '.mat-expansion-panel-header span.mat-content .mat-expansion-panel-header-description span.label-value',
             )
-            .textContent.replace(/[\n\r]+|[\s]{2,}/g, " ")
+            .textContent.replace(/[\n\r]+|[\s]{2,}/g, ' ')
             .trim(),
-        jbCard
+        jbCard,
       );
       jobs.push({
         job_link,
         job_title,
         job_location:
-          job_location != "Multiple"
-            ? String(job_location.replace("Turkey", "Türkiye").split(",")[1])
+          job_location != 'Multiple'
+            ? String(job_location.replace('Turkey', 'Türkiye').split(',')[1])
                 .slice(1)
-                .replace(" ", ", ")
-            : "Türkiye",
-        company: "Siemens",
+                .replace(' ', ', ')
+            : 'Türkiye',
+        company: 'Siemens',
+        scrape_name: 'siemens',
       });
     }
 

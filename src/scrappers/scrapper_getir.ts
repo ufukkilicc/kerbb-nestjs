@@ -40,6 +40,7 @@ export const getir = async () => {
         job_title,
         job_location,
         company: 'Getir',
+        scrape_name: 'getir',
       });
     }
   }

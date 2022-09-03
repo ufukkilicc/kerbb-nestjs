@@ -14,36 +14,36 @@ export const turkcell = async () => {
     userDataDir: './tmp',
   });
   const page = await browser.newPage();
-  await page.goto("https://kariyer.turkcell.com.tr/S/JobSearch", {
-    waitUntil: "load",
+  await page.goto('https://kariyer.turkcell.com.tr/S/JobSearch', {
+    waitUntil: 'load',
   });
   let pageNumber = 1;
   let pageEnd = false;
   let jobs = [];
   while (true) {
-    let jobCards = await page.$$(".special-search-item");
+    let jobCards = await page.$$('.special-search-item');
     for (const jbCard of jobCards) {
       const job_link = await page.evaluate(
-        (el) => el.querySelector(".search-content a").href,
-        jbCard
+        (el) => el.querySelector('.search-content a').href,
+        jbCard,
       );
       const job_title = await page.evaluate(
         (el) =>
           el
-            .querySelector(".search-content a")
-            .textContent.replace(/[\n\r]+|[\s]{2,}/g, " ")
+            .querySelector('.search-content a')
+            .textContent.replace(/[\n\r]+|[\s]{2,}/g, ' ')
             .trim()
-            .split("-")[1]
+            .split('-')[1]
             .substring(1),
-        jbCard
+        jbCard,
       );
       const job_location = await page.evaluate(
         (el) =>
           el
-            .querySelector(".search-content div span:last-of-type b")
-            .textContent.replace(/[\n\r]+|[\s]{2,}/g, " ")
+            .querySelector('.search-content div span:last-of-type b')
+            .textContent.replace(/[\n\r]+|[\s]{2,}/g, ' ')
             .trim(),
-        jbCard
+        jbCard,
       );
       jobs.push({
         job_link,
@@ -51,7 +51,8 @@ export const turkcell = async () => {
         job_location:
           job_location.toLowerCase().charAt(0).toUpperCase() +
           job_location.toLowerCase().slice(1),
-        company: "Turkcell",
+        company: 'Turkcell',
+        scrape_name: 'turkcell',
       });
     }
     pageEnd = (await page.$(`[data-pagenumber="${pageNumber + 1}"]`)) === null;
