@@ -5,8 +5,10 @@ import { ScrapperHelperService } from 'src/common/helpers/scrapper/scrapper-help
 import { CompaniesService } from 'src/companies/companies.service';
 import { JobsService } from 'src/jobs/jobs.service';
 import { NewsService } from 'src/news/news.service';
+import { acibadem } from 'src/scrappers/scrapper_acibadem';
 import { anadolugrup } from 'src/scrappers/scrapper_anadolugrup';
 import { dreamgames } from 'src/scrappers/scrapper_dreamgames';
+import { emlakkatilim } from 'src/scrappers/scrapper_emlakkatilim';
 import { getir } from 'src/scrappers/scrapper_getir';
 import { isbankasi } from 'src/scrappers/scrapper_isbankasi';
 import { koluman } from 'src/scrappers/scrapper_koluman';
@@ -158,12 +160,25 @@ export class ScrapperService {
         );
         return await this.create(scrapper_koluman);
       case 'turkcell':
-        // NOT YET FINISHED
         const scrapper_turkcell = await this.scrapperHelperService.runScrapper(
           'turkcell',
           turkcell,
         );
         return await this.create(scrapper_turkcell);
+      case 'emlakkatilim':
+        const scrapper_emlakkatilim =
+          await this.scrapperHelperService.runScrapper(
+            'emlakkatilim',
+            emlakkatilim,
+          );
+        return await this.create(scrapper_emlakkatilim);
+      case 'acibadem':
+        const scrapper_acibadem =
+          await this.scrapperHelperService.runScrapper(
+            'acibadem',
+            acibadem,
+          );
+        return await this.create(scrapper_acibadem);
       default:
         let scrapper: Scrapper;
         return scrapper;
@@ -221,7 +236,10 @@ export class ScrapperService {
     }
   }
   async findOne(id: string) {
-    const scrapper = await this.scrapperModel.findOne({ _id: id }).populate('scrapper_company').exec();
+    const scrapper = await this.scrapperModel
+      .findOne({ _id: id })
+      .populate('scrapper_company')
+      .exec();
     if (!scrapper) {
       throw new NotFoundException(`Scrapper ${id} was not found`);
     }

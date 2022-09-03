@@ -16,7 +16,7 @@ export class NewsService {
   generalSearchQuery = {
     page: 1,
     size: 10,
-    sort: 'ASC',
+    sort: 'DESC',
     sort_by: 'news_date',
   };
   async findAll(query?: NewsFilterDto) {

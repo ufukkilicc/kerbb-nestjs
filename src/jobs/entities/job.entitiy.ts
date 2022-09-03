@@ -22,10 +22,9 @@ export class Job extends Document {
     type: mongoose.Schema.Types.ObjectId,
     required: true,
     ref: Company.name,
-    default: {},
   })
   job_company: Company;
-  @Prop({ type: mongoose.Schema.Types.String, required: false })
+  @Prop({ type: mongoose.Schema.Types.String, required: true })
   scrape_name: string;
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
@@ -69,21 +68,21 @@ JobSchema.pre('save', async function (next) {
   var doc = this;
   const docCount = await doc.collection.countDocuments();
   doc.tracking_id = docCount + 1;
-  this.scrape_name = this.company
-    .replace(/\s/g, '')
-    .replace('Ğ', 'g')
-    .replace('Ü', 'u')
-    .replace('Ş', 's')
-    .replace('İ', 'i')
-    .replace('I', 'i')
-    .replace('Ö', 'o')
-    .replace('Ç', 'c')
-    .replace('ğ', 'g')
-    .replace('ü', 'u')
-    .replace('ş', 's')
-    .replace('ı', 'i')
-    .replace('ö', 'o')
-    .replace('ç', 'c')
-    .toLocaleLowerCase();
+  // this.scrape_name = this.company
+  //   .replace(/\s/g, '')
+  //   .replace('Ğ', 'g')
+  //   .replace('Ü', 'u')
+  //   .replace('Ş', 's')
+  //   .replace('İ', 'i')
+  //   .replace('I', 'i')
+  //   .replace('Ö', 'o')
+  //   .replace('Ç', 'c')
+  //   .replace('ğ', 'g')
+  //   .replace('ü', 'u')
+  //   .replace('ş', 's')
+  //   .replace('ı', 'i')
+  //   .replace('ö', 'o')
+  //   .replace('ç', 'c')
+  //   .toLocaleLowerCase();
   next();
 });

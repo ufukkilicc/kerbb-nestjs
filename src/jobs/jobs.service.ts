@@ -34,7 +34,7 @@ export class JobsService {
   async findAll(query?: FilterDto) {
     if (Object.keys(query).length !== 0) {
       const searchValue = await { ...this.generalSearchQuery, ...query };
-      const userRegex = new RegExp(searchValue.query_text, 'i');
+      const userRegex = new RegExp(searchValue.query_text.trim(), 'i');
       const locationRegex = new RegExp(searchValue.location_query_text, 'i');
       if (searchValue.is_highlighted) {
         return await this.jobModel
