@@ -51,7 +51,6 @@ export const turkcell = async () => {
         job_location:
           job_location.toLowerCase().charAt(0).toUpperCase() +
           job_location.toLowerCase().slice(1),
-        company: 'Turkcell',
         scrape_name: 'turkcell',
       });
     }

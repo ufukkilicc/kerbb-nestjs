@@ -70,7 +70,6 @@ export const siemens = async () => {
                 .slice(1)
                 .replace(' ', ', ')
             : 'Türkiye',
-        company: 'Siemens',
         scrape_name: 'siemens',
       });
     }

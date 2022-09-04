@@ -33,7 +33,6 @@ export const dreamgames = async () => {
       job_link,
       job_title,
       job_location: 'Türkiye',
-      company: 'Dream Games',
       scrape_name: 'dreamgames',
     });
   }
