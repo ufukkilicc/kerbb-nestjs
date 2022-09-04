@@ -51,7 +51,6 @@ export const anadolugrup = async () => {
       job_location: job_location
         .replace('TR', 'Türkiye')
         .replace('(Anadolu)', 'Anadolu'),
-      company: 'Anadolu Grup',
       scrape_name: 'anadolugrup',
     });
   }

@@ -64,6 +64,7 @@ export class ScrapperHelperService {
           .findOne({ job_link: jobLink })
           .exec();
         if (existing_job === null) {
+          job.company = company.name;
           const job_added = new this.jobModel(job);
           job_added.job_company = company;
           await job_added.save();

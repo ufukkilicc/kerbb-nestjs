@@ -39,7 +39,6 @@ export const acibadem = async () => {
       job_link,
       job_title,
       job_location: 'Türkiye',
-      company: 'Acıbadem',
       scrape_name: 'acibadem',
     });
   }

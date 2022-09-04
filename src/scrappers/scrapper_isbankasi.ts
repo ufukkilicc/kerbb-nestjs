@@ -37,7 +37,6 @@ export const isbankasi = async () => {
       job_link,
       job_title,
       job_location: 'Türkiye',
-      company: 'İş Bankası',
       scrape_name: 'isbankasi',
     });
   }

@@ -48,7 +48,6 @@ export const unilever = async () => {
       job_link,
       job_title,
       job_location,
-      company: 'Unilever',
       scrape_name: 'unilever',
     });
   }

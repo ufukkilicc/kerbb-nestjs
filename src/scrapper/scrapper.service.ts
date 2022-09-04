@@ -173,11 +173,10 @@ export class ScrapperService {
           );
         return await this.create(scrapper_emlakkatilim);
       case 'acibadem':
-        const scrapper_acibadem =
-          await this.scrapperHelperService.runScrapper(
-            'acibadem',
-            acibadem,
-          );
+        const scrapper_acibadem = await this.scrapperHelperService.runScrapper(
+          'acibadem',
+          acibadem,
+        );
         return await this.create(scrapper_acibadem);
       default:
         let scrapper: Scrapper;
