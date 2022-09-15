@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose, { Document, Number } from 'mongoose';
 import { Company } from 'src/companies/entities/company.entitiy';
 import { Tag } from 'src/tags/entities/tag.entitiy';
+import * as moment from 'moment-timezone';
 
 @Schema()
 export class Job extends Document {
@@ -57,7 +58,30 @@ export class Job extends Document {
   @Prop({
     type: mongoose.Schema.Types.Date,
     required: false,
-    default: new Date(),
+    default: function () {
+      const str = new Date().toLocaleString('tr-TR', {
+        timeZone: 'Europe/Istanbul',
+      });
+
+      const [dateValues, timeValues] = str.split(' ');
+      console.log(dateValues); // 👉️ "09/24/2022"
+      console.log(timeValues); // 👉️ "07:30:14"
+
+      const [day, month, year] = dateValues.split('.');
+      const [hours, minutes, seconds] = timeValues.split(':');
+
+      const date = new Date(
+        +year,
+        +month - 1,
+        +day,
+        +hours,
+        +minutes,
+        +seconds,
+      );
+
+      //  👇️️ Sat Sep 24 2022 07:30:14
+      return date;
+    },
   })
   date: Date;
 }
@@ -67,7 +91,14 @@ export const JobSchema = SchemaFactory.createForClass(Job);
 JobSchema.pre('save', async function (next) {
   var doc = this;
   const docCount = await doc.collection.countDocuments();
-  doc.tracking_id = docCount + 1;
+  var newTrackingId = docCount + 1;
+  const existingDocument = doc.collection.findOne({
+    tracking_id: newTrackingId,
+  });
+  if (!existingDocument) {
+    newTrackingId++;
+  }
+  doc.tracking_id = newTrackingId;
   // this.scrape_name = this.company
   //   .replace(/\s/g, '')
   //   .replace('Ğ', 'g')

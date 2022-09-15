@@ -11,6 +11,7 @@ import { AuthLoginDto } from './dto/auth-login.dto';
 const bcrypt = require('bcrypt');
 import * as jwt from 'jsonwebtoken';
 import { UsersService } from 'src/users/users.service';
+import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -73,5 +74,42 @@ export class AuthService {
     } catch (error) {
       console.log(error);
     }
+  }
+  async updateProfile(userId, updateUserDto: UpdateUserDto) {
+    console.log(userId);
+    const user = await this.usersService.findOne(userId);
+    if (updateUserDto.user_name) {
+      user.user_name = updateUserDto.user_name;
+    }
+    if (updateUserDto.user_surname) {
+      user.user_surname = updateUserDto.user_surname;
+    }
+    if (updateUserDto.user_email) {
+      user.user_email = updateUserDto.user_email;
+    }
+    user.save();
+    return user;
+  }
+  async updatePassword(userId, body) {
+    const user = await this.userModel
+      .findById(userId)
+      .populate([
+        { path: 'user_roles' },
+        { path: 'user_groups', populate: 'group_roles' },
+      ])
+      .exec();
+    const match = await bcrypt.compareSync(
+      `${process.env.HASH_TEXT}${body.old_password}`,
+      user.user_password,
+    );
+    if (!match) {
+      return new BadRequestException(`User password is not correct`);
+    }
+    if (body.new_password !== body.new_password_again) {
+      return new BadRequestException(`Password are not a match`);
+    }
+
+    user.user_password = body.new_password;
+    return await user.save();
   }
 }

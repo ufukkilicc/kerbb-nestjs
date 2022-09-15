@@ -6,6 +6,39 @@ import { Job } from 'src/jobs/entities/job.entitiy';
 import { JobsService } from 'src/jobs/jobs.service';
 import { CreateScrapperDto } from 'src/scrapper/dto/create-scrapper.dto';
 
+const dateHelper = function () {
+  const str = new Date().toLocaleString('tr-TR', {
+    timeZone: 'Europe/Istanbul',
+  });
+
+  const [dateValues, timeValues] = str.split(' ');
+  // console.log(dateValues); // 👉️ "09/24/2022"
+  // console.log(timeValues); // 👉️ "07:30:14"
+
+  const [day, month, year] = dateValues.split('.');
+  const [hours, minutes, seconds] = timeValues.split(':');
+
+  const date = new Date(+year, +month - 1, +day, +hours, +minutes, +seconds);
+
+  //  👇️️ Sat Sep 24 2022 07:30:14
+  return date;
+};
+const timeHelper = function () {
+  const str = new Date().toLocaleString('tr-TR', {
+    timeZone: 'Europe/Istanbul',
+  });
+
+  const [dateValues, timeValues] = str.split(' ');
+
+  const [day, month, year] = dateValues.split('.');
+  const [hours, minutes, seconds] = timeValues.split(':');
+
+  const date = new Date(+year, +month - 1, +day, +hours, +minutes, +seconds);
+
+  //  👇️️ Sat Sep 24 2022 07:30:14
+  return date.getTime();
+};
+
 @Injectable()
 export class ScrapperHelperService {
   title: string;
@@ -31,14 +64,14 @@ export class ScrapperHelperService {
     this.jobs_added = [];
     this.jobs_extracted = [];
     this.title = title;
-    this.start_date = new Date();
-    this.start_time = new Date().getTime();
+    this.start_date = dateHelper();
+    this.start_time = timeHelper();
     try {
       this.jobs = await callback();
       this.success = true;
       this.jobs_found = this.jobs.length;
-      this.end_date = new Date();
-      this.end_time = new Date().getTime();
+      this.end_date = dateHelper();
+      this.end_time = timeHelper();
       this.time_lasts = (this.end_time - this.start_time) / 1000;
       this.time_lasts_rounded = Math.round(this.time_lasts * 10) / 10;
       this.current_jobs = await this.jobModel
@@ -100,6 +133,7 @@ export class ScrapperHelperService {
       return createScrapperDto;
     } catch (error) {
       this.success = false;
+      console.log(error.stack);
       this.error_message = `${error}`;
       const companies = await this.companyModel.find({ scrape_name: title });
       const company = companies[0];

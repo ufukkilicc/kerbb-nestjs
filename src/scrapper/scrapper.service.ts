@@ -13,6 +13,8 @@ import { getir } from 'src/scrappers/scrapper_getir';
 import { isbankasi } from 'src/scrappers/scrapper_isbankasi';
 import { koluman } from 'src/scrappers/scrapper_koluman';
 import { siemens } from 'src/scrappers/scrapper_siemens';
+import { tiktak } from 'src/scrappers/scrapper_tiktak';
+import { trendyol } from 'src/scrappers/scrapper_trendyol';
 import { turkcell } from 'src/scrappers/scrapper_turkcell';
 import { unilever } from 'src/scrappers/scrapper_unilever';
 import { CompanyFilterDto } from 'tools/dtos/company-filter.dto';
@@ -97,7 +99,6 @@ export class ScrapperService {
     };
   }
   async scrapeOne(companyName: string, scrapeAll: boolean) {
-    console.log(companyName);
     if (!scrapeAll) {
       const generalSearchQuery = {
         page: 1,
@@ -178,6 +179,18 @@ export class ScrapperService {
           acibadem,
         );
         return await this.create(scrapper_acibadem);
+      case 'trendyol':
+        const scrapper_trendyol = await this.scrapperHelperService.runScrapper(
+          'trendyol',
+          trendyol,
+        );
+        return await this.create(scrapper_trendyol);
+      case 'tiktak':
+        const scrapper_tiktak = await this.scrapperHelperService.runScrapper(
+          'tiktak',
+          tiktak,
+        );
+        return await this.create(scrapper_tiktak);
       default:
         let scrapper: Scrapper;
         return scrapper;

@@ -18,7 +18,7 @@ export const getir = async () => {
     waitUntil: 'load',
   });
   await page.waitForSelector('.opening');
-  await page.select('select#office-container', 'Turkey');
+  // await page.select('select#office-container', 'Turkey');
   let jobCards = await page.$$('.opening');
   let jobs = [];
   for (const jbCard of jobCards) {
@@ -34,14 +34,14 @@ export const getir = async () => {
       (el) => el.getAttribute('data-office_id'),
       jbCard,
     );
-    if (job_location.includes('Turkey')) {
-      jobs.push({
-        job_link,
-        job_title,
-        job_location,
-        scrape_name: 'getir',
-      });
-    }
+    // if (job_location.includes('Turkey')) {
+    jobs.push({
+      job_link,
+      job_title,
+      job_location,
+      scrape_name: 'getir',
+    });
+    // }
   }
   await browser.close();
   return jobs;

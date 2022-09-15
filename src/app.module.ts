@@ -31,11 +31,31 @@ import { TagsModule } from './tags/tags.module';
 import { TagTypesModule } from './tag-types/tag-types.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { TasksModule } from './common/helpers/tasks/tasksService.module';
+import { MailerModule } from '@nestjs-modules/mailer/';
+import { EmailModule } from './email/email.module';
+import { join } from 'path';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { PublisherController } from './publisher/publisher.controller';
+import { PublisherService } from './publisher/publisher.service';
+import { PublisherModule } from './publisher/publisher.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       load: [appConfig],
+    }),
+    MailerModule.forRoot({
+      transport: {
+        host: process.env.MAIL_HOST,
+        auth: {
+          user: process.env.MAIL_USER,
+          pass: process.env.MAIL_PASS,
+        },
+      },
+      template: {
+        dir: join(__dirname.slice(0, -4), 'mails'),
+        adapter: new HandlebarsAdapter(),
+      },
     }),
     ScheduleModule.forRoot(),
     MongooseModule.forRoot(process.env.DATABASE_MONGO_URI),
@@ -62,6 +82,8 @@ import { TasksModule } from './common/helpers/tasks/tasksService.module';
     TagsModule,
     TagTypesModule,
     TasksModule,
+    EmailModule,
+    PublisherModule,
   ],
   controllers: [AppController],
   providers: [
@@ -88,6 +110,8 @@ export class AppModule implements NestModule {
         { path: 'news/:id', method: RequestMethod.GET },
         { path: 'news/:id/inc-view', method: RequestMethod.PATCH },
         { path: 'users', method: RequestMethod.GET },
+        { path: 'auth/forgot-password', method: RequestMethod.POST },
+        { path: 'auth/reset-password', method: RequestMethod.PATCH },
         { path: 'users/:id', method: RequestMethod.GET },
         { path: 'scrapper', method: RequestMethod.GET },
         { path: 'tickets', method: RequestMethod.GET },
@@ -95,6 +119,8 @@ export class AppModule implements NestModule {
         { path: 'tags', method: RequestMethod.GET },
         { path: 'tag-types', method: RequestMethod.GET },
         { path: 'role', method: RequestMethod.GET },
+        { path: 'publisher', method: RequestMethod.GET },
+        { path: 'publisher/:id', method: RequestMethod.GET },
         { path: 'total', method: RequestMethod.GET },
       )
       .forRoutes('*');

@@ -9,7 +9,7 @@ export const emlakkatilim = async () => {
       '--disable-gpu',
       '--disable-dev-shm-usage',
     ],
-    headless: true,
+    headless: false,
     defaultViewport: false,
     userDataDir: './tmp',
   });
@@ -20,10 +20,10 @@ export const emlakkatilim = async () => {
 
   let jobs = [];
   let isBtnDisabled = false;
+  let jobCards = await page.$$('td a.GL');
 
   while (true) {
     await page.waitForSelector('td a.GL');
-    let jobCards = await page.$$('td a.GL');
     for (let i = 0; i < jobCards.length; i++) {
       await page.waitForSelector('td a.GL');
       const job_link = await page.evaluate((el) => el.href, jobCards[i]);

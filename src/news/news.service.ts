@@ -28,6 +28,7 @@ export class NewsService {
         .skip(searchValue.size * (searchValue.page - 1))
         .sort([[`${searchValue.sort_by}`, searchValue.sort]])
         .populate({ path: 'news_tags', populate: { path: 'tag_type' } })
+        .populate('news_publisher')
         .exec();
     } else {
       return this.newsModel
@@ -38,6 +39,7 @@ export class NewsService {
           [`${this.generalSearchQuery.sort_by}`, this.generalSearchQuery.sort],
         ])
         .populate({ path: 'news_tags', populate: { path: 'tag_type' } })
+        .populate('news_publisher')
         .exec();
     }
   }
@@ -45,6 +47,7 @@ export class NewsService {
     const news = await this.newsModel
       .findOne({ _id: id })
       .populate('news_tags')
+      .populate('news_publisher')
       .exec();
     if (!news) {
       throw new NotFoundException(`News ${id} was not found`);
@@ -58,6 +61,8 @@ export class NewsService {
   async update(id: string, updateNewsDto: UpdateNewsDto) {
     const existingNews = await this.newsModel
       .findOneAndUpdate({ _id: id }, { $set: updateNewsDto }, { new: true })
+      .populate('news_tags')
+      .populate('news_publisher')
       .exec();
 
     if (!existingNews) {
@@ -68,6 +73,8 @@ export class NewsService {
   async incrementView(id: string) {
     const existingNews = await this.newsModel
       .findOneAndUpdate({ _id: id }, { $inc: { news_views: 1 } }, { new: true })
+      .populate('news_tags')
+      .populate('news_publisher')
       .exec();
 
     if (!existingNews) {
@@ -94,8 +101,9 @@ export class NewsService {
           },
         );
         const cloudResponse = await cloudinary.v2.uploader.upload(
-          file.path,{
-            folder: 'local/news_thumbnails'
+          file.path,
+          {
+            folder: 'local/news_thumbnails',
           },
           function (error, response) {
             return response;
@@ -113,8 +121,9 @@ export class NewsService {
     } else {
       try {
         const cloudResponse = await cloudinary.v2.uploader.upload(
-          file.path,{
-            folder: 'local/news_thumbnails'
+          file.path,
+          {
+            folder: 'local/news_thumbnails',
           },
           function (error, response) {
             return response;
@@ -152,6 +161,8 @@ export class NewsService {
         { image_url: imageUrl, image_public_id: publicId },
         { new: true },
       )
+      .populate('news_tags')
+      .populate('news_publisher')
       .exec();
   }
 }

@@ -190,7 +190,11 @@ export class CompaniesService {
     const existingCompany = await this.companyModel
       .findOneAndUpdate({ _id: id }, { $set: updateCompanyDto }, { new: true })
       .exec();
-
+    const scrapeName = existingCompany.scrape_name;
+    await this.jobModel.updateMany(
+      { scrape_name: scrapeName },
+      { $set: { company: existingCompany.name } },
+    );
     if (!existingCompany) {
       throw new NotFoundException(`Company ${id} was not found`);
     }
@@ -217,19 +221,32 @@ export class CompaniesService {
         `Company ${id} can not be highlighted if it's not active`,
       );
     }
-    const existingCompany = await this.companyModel
-      .findOneAndUpdate(
-        { _id: id },
-        { $set: { is_highlighted: !company.is_highlighted } },
-        { new: true },
-      )
-      .populate([{ path: 'company_tags', populate: 'tag_type' }])
-      .exec();
-
-    if (!existingCompany) {
-      throw new NotFoundException(`Company ${id} was not found`);
+    if (company.is_highlighted) {
+      const existingCompany = await this.companyModel
+        .findOneAndUpdate(
+          { _id: id },
+          {
+            $set: {
+              is_highlighted: !company.is_highlighted,
+              highlight_order: null,
+            },
+          },
+          { new: true },
+        )
+        .populate([{ path: 'company_tags', populate: 'tag_type' }])
+        .exec();
+      return existingCompany;
+    } else {
+      const existingCompany = await this.companyModel
+        .findOneAndUpdate(
+          { _id: id },
+          { $set: { is_highlighted: !company.is_highlighted } },
+          { new: true },
+        )
+        .populate([{ path: 'company_tags', populate: 'tag_type' }])
+        .exec();
+      return existingCompany;
     }
-    return existingCompany;
   }
   async highlightOrderCompany(id: string, highlight_order: number) {
     const company = await this.findOne(id);
