@@ -4,6 +4,7 @@ import { Group } from 'src/group/entities/group.entity';
 import { Role } from 'src/role/entities/role.entitiy';
 import { Audit } from 'tools/entities/audit.entitiy';
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 @Schema()
 export class User extends Document {
@@ -17,6 +18,10 @@ export class User extends Document {
   @Prop({ type: mongoose.Schema.Types.String }) user_surname: string;
   @Prop({ type: mongoose.Schema.Types.String }) user_email: string;
   @Prop({ type: mongoose.Schema.Types.String }) user_password: string;
+  @Prop({ type: mongoose.Schema.Types.String })
+  user_reset_password_token: string;
+  @Prop({ type: mongoose.Schema.Types.String })
+  user_reset_password_expire: Date;
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Role',
@@ -29,10 +34,33 @@ export class User extends Document {
     default: [],
   })
   user_groups: Group[];
+
+  getResetPasswordTokenFromUser(): string {
+    const randomHexString = crypto.randomBytes(15).toString('hex');
+    const resetPasswordToken = crypto
+      .createHash('SHA256')
+      .update(randomHexString)
+      .digest('hex');
+    return resetPasswordToken;
+  }
+
   // @Prop() audit: Audit;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.methods.getResetPasswordTokenFromUser = function () {
+  const { RESET_PASSWORD_EXPIRE } = process.env;
+  const randomHexString = crypto.randomBytes(15).toString('hex');
+  const resetPasswordToken = crypto
+    .createHash('SHA256')
+    .update(randomHexString)
+    .digest('hex');
+  this.user_reset_password_token = resetPasswordToken;
+  this.user_reset_password_expire =
+    Date.now() + parseInt(RESET_PASSWORD_EXPIRE);
+  return resetPasswordToken;
+};
 
 UserSchema.pre('save', async function (next) {
   var doc = this;
@@ -47,4 +75,5 @@ UserSchema.pre('save', async function (next) {
     `${hashText}${this.user_password}`,
     saltRounds,
   );
+  next();
 });

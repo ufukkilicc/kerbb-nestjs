@@ -18,6 +18,7 @@ import {
   Scrapper,
   ScrapperSchema,
 } from 'src/scrapper/entitiy/scrapper.entitiy';
+import { Publisher, PublisherSchema } from 'src/publisher/entities/publisher.entity';
 
 @Module({
   imports: [
@@ -61,6 +62,10 @@ import {
       {
         name: Scrapper.name,
         schema: ScrapperSchema,
+      },
+      {
+        name: Publisher.name,
+        schema: PublisherSchema,
       },
     ]),
   ],

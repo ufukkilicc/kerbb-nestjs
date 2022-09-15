@@ -11,6 +11,7 @@ import { Ticket } from 'src/ticket/entities/ticket.entitiy';
 import { TicketType } from 'src/ticket-types/entities/ticket-type.entitiy';
 import { News } from 'src/news/entities/news.entitiy';
 import { Scrapper } from 'src/scrapper/entitiy/scrapper.entitiy';
+import { Publisher } from 'src/publisher/entities/publisher.entity';
 
 @Injectable()
 export class TotalService {
@@ -26,6 +27,8 @@ export class TotalService {
     @InjectModel(Scrapper.name) private readonly scrapperMongo: Model<Scrapper>,
     @InjectModel(TicketType.name)
     private readonly ticketTypeMongo: Model<TicketType>,
+    @InjectModel(Publisher.name)
+    private readonly publisherMongo: Model<Publisher>,
   ) {}
 
   async findAll(): Promise<any> {
@@ -41,6 +44,7 @@ export class TotalService {
     const ticketTypeCount = await this.ticketTypeMongo
       .countDocuments({})
       .exec();
+    const publisherCount = await this.publisherMongo.countDocuments({}).exec();
 
     return await {
       job: jobCount,
@@ -53,6 +57,7 @@ export class TotalService {
       activity: activityCount,
       ticket: ticketCount,
       ticketType: ticketTypeCount,
+      publisher: publisherCount,
     };
   }
 }
