@@ -16,6 +16,8 @@ export class Company extends Document {
   scrape_name: string;
   @Prop({ type: mongoose.Schema.Types.Number, required: false, default: 0 })
   job_count: number;
+  @Prop({ type: mongoose.Schema.Types.Number, required: false, default: 0 })
+  redirect_count: number;
   @Prop({
     type: mongoose.Schema.Types.Boolean,
     required: false,

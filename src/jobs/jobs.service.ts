@@ -6,6 +6,9 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { DateHelper, nowDateTurkey } from 'src/common/helpers/dateHelper';
+import { CompaniesService } from 'src/companies/companies.service';
+import { Company } from 'src/companies/entities/company.entitiy';
 import { FilterDto } from 'tools/dtos/filter.dto';
 import { CreateJobDto } from './dto/create-job.dto';
 import { UpdateJobDto } from './dto/update-job.dto';
@@ -15,7 +18,9 @@ import { Job } from './entities/job.entitiy';
 export class JobsService {
   constructor(
     @InjectModel(Job.name) private readonly jobModel: Model<Job>,
+    @InjectModel(Company.name) private readonly companyModel: Model<Company>,
     private readonly configService: ConfigService,
+    private readonly companiesService: CompaniesService,
   ) {}
   generalSearchQuery = {
     page: 1,
@@ -28,14 +33,25 @@ export class JobsService {
     search_location_by: 'job_location',
     search_company_by: 'company',
     search_scrape_by: 'scrape_name',
+    search_date_by: 'date',
     is_highlighted: false,
     search_highlighted_by: 'is_highlighted',
+    date: 'whole',
   };
   async findAll(query?: FilterDto) {
     if (Object.keys(query).length !== 0) {
       const searchValue = await { ...this.generalSearchQuery, ...query };
       const userRegex = new RegExp(searchValue.query_text.trim(), 'i');
       const locationRegex = new RegExp(searchValue.location_query_text, 'i');
+
+      const theNow = nowDateTurkey();
+      const threeHours = theNow.setHours(theNow.getHours() - 3);
+      const twentyFourHours = theNow.setHours(theNow.getHours() - 24);
+      const sevenDays = theNow.setDate(theNow.getDate() - 7);
+      const oneMonth = theNow.setDate(theNow.getDate() - 30);
+
+      console.log({ theNow, threeHours, twentyFourHours, sevenDays });
+      console.log({ searchValue });
       if (searchValue.is_highlighted) {
         return await this.jobModel
           .find({})
@@ -67,32 +83,164 @@ export class JobsService {
           .populate('job_company')
           .exec();
       } else {
-        return await this.jobModel
-          .find({})
-          .and([
-            {
-              $or: [
-                {
-                  [searchValue.search_title_by]: userRegex,
-                },
-                {
-                  [searchValue.search_company_by]: userRegex,
-                },
-                {
-                  [searchValue.search_scrape_by]: userRegex,
-                },
-              ],
-            },
-            { [searchValue.search_location_by]: locationRegex },
-          ])
-          .sort({
-            [searchValue.sort_by]: searchValue.sort === 'ASC' ? 'asc' : 'desc',
-          })
-          .limit(Math.max(0, searchValue.size))
-          .skip(searchValue.size * (searchValue.page - 1))
-          .populate([{ path: 'job_tags', populate: 'tag_type' }])
-          .populate('job_company')
-          .exec();
+        if (searchValue.date === 'three-hours') {
+          console.log('three-hours');
+          return await this.jobModel
+            .find({})
+            .and([
+              {
+                $or: [
+                  {
+                    [searchValue.search_title_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_company_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_scrape_by]: userRegex,
+                  },
+                ],
+              },
+              { [searchValue.search_location_by]: locationRegex },
+              {
+                [searchValue.search_date_by]: { $gt: threeHours },
+              },
+            ])
+            .sort({
+              [searchValue.sort_by]:
+                searchValue.sort === 'ASC' ? 'asc' : 'desc',
+            })
+            .limit(Math.max(0, searchValue.size))
+            .skip(searchValue.size * (searchValue.page - 1))
+            .populate([{ path: 'job_tags', populate: 'tag_type' }])
+            .populate('job_company')
+            .exec();
+        } else if (searchValue.date === 'twenty-four-hours') {
+          console.log('twenty-four-hours');
+          return await this.jobModel
+            .find({})
+            .and([
+              {
+                $or: [
+                  {
+                    [searchValue.search_title_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_company_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_scrape_by]: userRegex,
+                  },
+                ],
+              },
+              { [searchValue.search_location_by]: locationRegex },
+              {
+                [searchValue.search_date_by]: { $gt: twentyFourHours },
+              },
+            ])
+            .sort({
+              [searchValue.sort_by]:
+                searchValue.sort === 'ASC' ? 'asc' : 'desc',
+            })
+            .limit(Math.max(0, searchValue.size))
+            .skip(searchValue.size * (searchValue.page - 1))
+            .populate([{ path: 'job_tags', populate: 'tag_type' }])
+            .populate('job_company')
+            .exec();
+        } else if (searchValue.date === 'seven-days') {
+          console.log('seven-days');
+          return await this.jobModel
+            .find({})
+            .and([
+              {
+                $or: [
+                  {
+                    [searchValue.search_title_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_company_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_scrape_by]: userRegex,
+                  },
+                ],
+              },
+              { [searchValue.search_location_by]: locationRegex },
+              {
+                [searchValue.search_date_by]: { $gt: sevenDays },
+              },
+            ])
+            .sort({
+              [searchValue.sort_by]:
+                searchValue.sort === 'ASC' ? 'asc' : 'desc',
+            })
+            .limit(Math.max(0, searchValue.size))
+            .skip(searchValue.size * (searchValue.page - 1))
+            .populate([{ path: 'job_tags', populate: 'tag_type' }])
+            .populate('job_company')
+            .exec();
+        } else if (searchValue.date === 'one-month') {
+          console.log('one-month');
+          return await this.jobModel
+            .find({})
+            .and([
+              {
+                $or: [
+                  {
+                    [searchValue.search_title_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_company_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_scrape_by]: userRegex,
+                  },
+                ],
+              },
+              { [searchValue.search_location_by]: locationRegex },
+              {
+                [searchValue.search_date_by]: { $gt: oneMonth },
+              },
+            ])
+            .sort({
+              [searchValue.sort_by]:
+                searchValue.sort === 'ASC' ? 'asc' : 'desc',
+            })
+            .limit(Math.max(0, searchValue.size))
+            .skip(searchValue.size * (searchValue.page - 1))
+            .populate([{ path: 'job_tags', populate: 'tag_type' }])
+            .populate('job_company')
+            .exec();
+        } else if (searchValue.date === 'whole') {
+          console.log('whole');
+          return await this.jobModel
+            .find({})
+            .and([
+              {
+                $or: [
+                  {
+                    [searchValue.search_title_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_company_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_scrape_by]: userRegex,
+                  },
+                ],
+              },
+              { [searchValue.search_location_by]: locationRegex },
+            ])
+            .sort({
+              [searchValue.sort_by]:
+                searchValue.sort === 'ASC' ? 'asc' : 'desc',
+            })
+            .limit(Math.max(0, searchValue.size))
+            .skip(searchValue.size * (searchValue.page - 1))
+            .populate([{ path: 'job_tags', populate: 'tag_type' }])
+            .populate('job_company')
+            .exec();
+        }
       }
     } else {
       return await this.jobModel
@@ -144,7 +292,13 @@ export class JobsService {
     const existingJob = await this.jobModel
       .findOneAndUpdate({ _id: id }, { $inc: { job_views: 1 } }, { new: true })
       .exec();
-
+    const existingCompany = await this.companyModel
+      .findOneAndUpdate(
+        { scrape_name: existingJob.scrape_name },
+        { $inc: { redirect_count: 1 } },
+        { new: true },
+      )
+      .exec();
     if (!existingJob) {
       throw new NotFoundException(`Job ${id} was not found`);
     }
