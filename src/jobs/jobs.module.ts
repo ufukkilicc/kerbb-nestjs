@@ -1,6 +1,8 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+import { CompaniesModule } from 'src/companies/companies.module';
+import { Company, CompanySchema } from 'src/companies/entities/company.entitiy';
 import { Job, JobSchema } from './entities/job.entitiy';
 import { JobsController } from './jobs.controller';
 import { JobsService } from './jobs.service';
@@ -13,7 +15,14 @@ import { JobsService } from './jobs.service';
         schema: JobSchema,
       },
     ]),
+    MongooseModule.forFeature([
+      {
+        name: Company.name,
+        schema: CompanySchema,
+      },
+    ]),
     ConfigModule,
+    forwardRef(() => CompaniesModule),
   ],
   controllers: [JobsController],
   providers: [JobsService],

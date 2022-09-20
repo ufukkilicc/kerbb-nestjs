@@ -8,7 +8,7 @@ export const unilever = async () => {
       '--no-sandbox',
       '--headless',
       '--disable-gpu',
-      '--disable-dev-shm-usage'
+      '--disable-dev-shm-usage',
     ],
     defaultViewport: false,
     userDataDir: './tmp',
@@ -44,12 +44,14 @@ export const unilever = async () => {
       jbCard,
     );
 
-    jobs.push({
-      job_link,
-      job_title,
-      job_location,
-      scrape_name: 'unilever',
-    });
+    if (job_location.includes('Türkiye')) {
+      jobs.push({
+        job_link,
+        job_title,
+        job_location,
+        scrape_name: 'unilever',
+      });
+    }
   }
   await browser.close();
   return jobs;

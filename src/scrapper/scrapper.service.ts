@@ -6,12 +6,17 @@ import { CompaniesService } from 'src/companies/companies.service';
 import { JobsService } from 'src/jobs/jobs.service';
 import { NewsService } from 'src/news/news.service';
 import { acibadem } from 'src/scrappers/scrapper_acibadem';
+import { akbank } from 'src/scrappers/scrapper_akbank';
 import { anadolugrup } from 'src/scrappers/scrapper_anadolugrup';
+import { aposto } from 'src/scrappers/scrapper_aposto';
+import { ciceksepeti } from 'src/scrappers/scrapper_ciceksepeti';
 import { dreamgames } from 'src/scrappers/scrapper_dreamgames';
 import { emlakkatilim } from 'src/scrappers/scrapper_emlakkatilim';
 import { getir } from 'src/scrappers/scrapper_getir';
+import { insider } from 'src/scrappers/scrapper_insider';
 import { isbankasi } from 'src/scrappers/scrapper_isbankasi';
 import { koluman } from 'src/scrappers/scrapper_koluman';
+import { iyzico } from 'src/scrappers/scrapper_iyzico';
 import { siemens } from 'src/scrappers/scrapper_siemens';
 import { tiktak } from 'src/scrappers/scrapper_tiktak';
 import { trendyol } from 'src/scrappers/scrapper_trendyol';
@@ -22,6 +27,7 @@ import { ScrapperFilterDto } from 'tools/dtos/scrapper-filter.dto';
 import { CreateScrapperDto } from './dto/create-scrapper.dto';
 import { UpdateScrapperDto } from './dto/update-scrapper.dto';
 import { Scrapper } from './entitiy/scrapper.entitiy';
+import { vodafone } from 'src/scrappers/scrapper_vodafone';
 
 @Injectable()
 export class ScrapperService {
@@ -191,6 +197,43 @@ export class ScrapperService {
           tiktak,
         );
         return await this.create(scrapper_tiktak);
+      case 'aposto':
+        const scrapper_aposto = await this.scrapperHelperService.runScrapper(
+          'aposto',
+          aposto,
+        );
+        return await this.create(scrapper_aposto);
+      case 'ciceksepeti':
+        const scrapper_ciceksepeti =
+          await this.scrapperHelperService.runScrapper(
+            'ciceksepeti',
+            ciceksepeti,
+          );
+        return await this.create(scrapper_ciceksepeti);
+      case 'insider':
+        const scrapper_insider = await this.scrapperHelperService.runScrapper(
+          'insider',
+          insider,
+        );
+        return await this.create(scrapper_insider);
+      case 'iyzico':
+        const scrapper_iyzico = await this.scrapperHelperService.runScrapper(
+          'iyzico',
+          iyzico,
+        );
+        return await this.create(scrapper_iyzico);
+      case 'akbank':
+        const scrapper_akbank = await this.scrapperHelperService.runScrapper(
+          'akbank',
+          akbank,
+        );
+        return await this.create(scrapper_akbank);
+      case 'vodafone':
+        const scrapper_vodafone = await this.scrapperHelperService.runScrapper(
+          'vodafone',
+          vodafone,
+        );
+        return await this.create(scrapper_vodafone);
       default:
         let scrapper: Scrapper;
         return scrapper;

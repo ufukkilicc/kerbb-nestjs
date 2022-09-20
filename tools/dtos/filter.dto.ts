@@ -34,4 +34,7 @@ export class FilterDto {
   @IsOptional()
   @IsBoolean()
   is_highlighted: boolean;
+  @IsOptional()
+  @IsString()
+  date: string;
 }

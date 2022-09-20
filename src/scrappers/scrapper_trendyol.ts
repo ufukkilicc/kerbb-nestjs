@@ -45,9 +45,7 @@ export const trendyol = async () => {
     jobs.push({
       job_link,
       job_title,
-      job_location: job_location.includes('Türkiye')
-        ? job_location
-        : job_location + ', Türkiye',
+      job_location,
       scrape_name: 'trendyol',
     });
   }
