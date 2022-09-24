@@ -28,6 +28,7 @@ import { CreateScrapperDto } from './dto/create-scrapper.dto';
 import { UpdateScrapperDto } from './dto/update-scrapper.dto';
 import { Scrapper } from './entitiy/scrapper.entitiy';
 import { vodafone } from 'src/scrappers/scrapper_vodafone';
+import { turkhavayollari } from 'src/scrappers/scrapper_turkhavayollari';
 
 @Injectable()
 export class ScrapperService {
@@ -234,6 +235,12 @@ export class ScrapperService {
           vodafone,
         );
         return await this.create(scrapper_vodafone);
+      case 'turkhavayollari':
+        const scrapper_turkhavayollari = await this.scrapperHelperService.runScrapper(
+          'turkhavayollari',
+          turkhavayollari,
+        );
+        return await this.create(scrapper_turkhavayollari);
       default:
         let scrapper: Scrapper;
         return scrapper;
