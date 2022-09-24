@@ -42,6 +42,8 @@ export class AuthGuard implements CanActivate {
     const user_roles = user.user_roles;
 
     const userRoles: string[] = [];
+    console.log(userRoles);
+    console.log(allowedRoles);
 
     for (const role of user_roles) {
       userRoles.push(role.role_name);
