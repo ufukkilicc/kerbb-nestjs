@@ -35,12 +35,15 @@ export const acibadem = async () => {
           .trim(),
       jbCard,
     );
-    jobs.push({
-      job_link,
-      job_title,
-      job_location: 'Türkiye',
-      scrape_name: 'acibadem',
-    });
+    let isExist = jobs.find((job) => job.job_link === job_link);
+    if (!isExist) {
+      jobs.push({
+        job_link,
+        job_title,
+        job_location: 'Türkiye',
+        scrape_name: 'acibadem',
+      });
+    }
   }
   await browser.close();
   return jobs;

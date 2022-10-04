@@ -33,12 +33,16 @@ export const isbankasi = async () => {
           .trim(),
       jbCard,
     );
-    jobs.push({
-      job_link,
-      job_title,
-      job_location: 'Türkiye',
-      scrape_name: 'isbankasi',
-    });
+    let isExist = jobs.find((job) => job.job_link === job_link);
+
+    if (!isExist) {
+      jobs.push({
+        job_link,
+        job_title,
+        job_location: 'Türkiye',
+        scrape_name: 'isbankasi',
+      });
+    }
   }
   await browser.close();
   return jobs;

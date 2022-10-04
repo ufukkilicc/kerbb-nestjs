@@ -58,6 +58,10 @@ export class News extends Document {
   image_url: string;
   @Prop({ type: mongoose.Schema.Types.String, required: false, default: '' })
   image_public_id: string;
+  @Prop({ type: mongoose.Schema.Types.String, required: false, default: '' })
+  image_url_secondary: string;
+  @Prop({ type: mongoose.Schema.Types.String, required: false, default: '' })
+  image_public_id_secondary: string;
   @Prop({
     type: [mongoose.Schema.Types.ObjectId],
     ref: Tag.name,
@@ -80,6 +84,8 @@ NewsSchema.pre('save', async function (next) {
     newTrackingId++;
   }
   doc.tracking_id = newTrackingId;
+  let newsContent = doc.news_content;
+  doc.news_content = newsContent.replace(/<a /g ,'<a target="_blank" rel="noreferer "')
   next();
 });
 NewsSchema.pre('remove', async function (next) {
@@ -92,6 +98,14 @@ NewsSchema.pre('remove', async function (next) {
   if (doc.image_url !== '') {
     const cloudDeleteResponse = await cloudinary.v2.uploader.destroy(
       doc.image_public_id,
+      function (error, response) {
+        return response;
+      },
+    );
+  }
+  if (doc.image_url_secondary !== '') {
+    const cloudDeleteResponse = await cloudinary.v2.uploader.destroy(
+      doc.image_public_id_secondary,
       function (error, response) {
         return response;
       },

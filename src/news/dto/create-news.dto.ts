@@ -10,7 +10,7 @@ import { Publisher } from 'src/publisher/entities/publisher.entity';
 
 export class CreateNewstDto {
   @IsString() readonly news_title: string;
-  @IsString() readonly news_content: string;
+  @IsString()  news_content: string;
   @IsString()
   @IsOptional()
   readonly image_url: string;

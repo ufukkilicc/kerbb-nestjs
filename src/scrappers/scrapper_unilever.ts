@@ -43,8 +43,9 @@ export const unilever = async () => {
           .trim(),
       jbCard,
     );
+    let isExist = jobs.find((job) => job.job_link === job_link);
 
-    if (job_location.includes('Türkiye')) {
+    if (job_location.includes('Türkiye') && !isExist) {
       jobs.push({
         job_link,
         job_title,

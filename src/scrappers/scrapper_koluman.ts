@@ -32,12 +32,16 @@ export const koluman = async () => {
           .trim(),
       jbCard,
     );
-    jobs.push({
-      job_link,
-      job_title,
-      job_location: 'Türkiye',
-      scrape_name: 'koluman',
-    });
+    let isExist = jobs.find((job) => job.job_link === job_link);
+
+    if (!isExist) {
+      jobs.push({
+        job_link,
+        job_title,
+        job_location: 'Türkiye',
+        scrape_name: 'koluman',
+      });
+    }
   }
   await browser.close();
   return jobs;

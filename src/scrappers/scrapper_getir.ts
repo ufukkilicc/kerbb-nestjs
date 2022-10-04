@@ -35,12 +35,16 @@ export const getir = async () => {
       jbCard,
     );
     // if (job_location.includes('Turkey')) {
-    jobs.push({
-      job_link,
-      job_title,
-      job_location,
-      scrape_name: 'getir',
-    });
+    let isExist = jobs.find((job) => job.job_link === job_link);
+
+    if (!isExist) {
+      jobs.push({
+        job_link,
+        job_title,
+        job_location,
+        scrape_name: 'getir',
+      });
+    }
     // }
   }
   await browser.close();

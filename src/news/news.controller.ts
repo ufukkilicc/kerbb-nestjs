@@ -75,6 +75,14 @@ export class NewsController {
   ): Promise<any> {
     return await this.newsService.upload(file, id);
   }
+  @Post(':id/upload-secondary')
+  @UseInterceptors(FileInterceptor('file', { storage: storage_options }))
+  async uploadFileSecondary(
+    @UploadedFile() file: Express.Multer.File,
+    @Param('id') id: string,
+  ): Promise<any> {
+    return await this.newsService.uploadImageSecondary(file, id);
+  }
   // @Get(':id/download')
   // async downloadFile(
   //   @Res() res: Response,

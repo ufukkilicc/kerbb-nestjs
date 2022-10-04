@@ -40,12 +40,16 @@ export const ciceksepeti = async () => {
           .trim(),
       jbCard,
     );
-    jobs.push({
-      job_link,
-      job_title,
-      job_location,
-      scrape_name: 'ciceksepeti',
-    });
+    let isExist = jobs.find((job) => job.job_link === job_link);
+
+    if (!isExist) {
+      jobs.push({
+        job_link,
+        job_title,
+        job_location,
+        scrape_name: 'ciceksepeti',
+      });
+    }
   }
   await browser.close();
   return jobs;

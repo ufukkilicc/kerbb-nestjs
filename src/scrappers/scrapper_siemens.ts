@@ -61,17 +61,21 @@ export const siemens = async () => {
             .trim(),
         jbCard,
       );
-      jobs.push({
-        job_link,
-        job_title,
-        job_location:
-          job_location != 'Multiple'
-            ? String(job_location.replace('Turkey', 'Türkiye').split(',')[1])
-                .slice(1)
-                .replace(' ', ', ')
-            : 'Türkiye',
-        scrape_name: 'siemens',
-      });
+      let isExist = jobs.find((job) => job.job_link === job_link);
+
+      if (!isExist) {
+        jobs.push({
+          job_link,
+          job_title,
+          job_location:
+            job_location != 'Multiple'
+              ? String(job_location.replace('Turkey', 'Türkiye').split(',')[1])
+                  .slice(1)
+                  .replace(' ', ', ')
+              : 'Türkiye',
+          scrape_name: 'siemens',
+        });
+      }
     }
 
     await page.click(

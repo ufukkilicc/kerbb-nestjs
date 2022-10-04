@@ -29,12 +29,16 @@ export const dreamgames = async () => {
       jbCard,
     );
     const job_link = await page.evaluate((el) => el.href, jbCard);
-    jobs.push({
-      job_link,
-      job_title,
-      job_location: 'Türkiye',
-      scrape_name: 'dreamgames',
-    });
+    let isExist = jobs.find((job) => job.job_link === job_link);
+
+    if (!isExist) {
+      jobs.push({
+        job_link,
+        job_title,
+        job_location: 'Türkiye',
+        scrape_name: 'dreamgames',
+      });
+    }
   }
   await browser.close();
   return jobs;

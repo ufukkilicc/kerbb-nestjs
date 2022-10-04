@@ -40,12 +40,15 @@ export const akbank = async () => {
               .trim(),
           jbCard,
         );
-        jobs.push({
-          job_link,
-          job_title,
-          job_location: 'Türkiye',
-          scrape_name: 'akbank',
-        });
+        let isExist = jobs.find((job) => job.job_link === job_link);
+        if (!isExist) {
+          jobs.push({
+            job_link,
+            job_title,
+            job_location: 'Türkiye',
+            scrape_name: 'akbank',
+          });
+        }
       }
     }
     for (const jbCard of jobCards) {
@@ -68,19 +71,22 @@ export const akbank = async () => {
       //       .trim(),
       //   jbCard
       // );
-      jobs.push({
-        job_link,
-        job_title,
-        job_location: 'Türkiye',
-        scrape_name: 'akbank',
-      });
+      let isExist = jobs.find((job) => job.job_link === job_link);
+      if (!isExist) {
+        jobs.push({
+          job_link,
+          job_title,
+          job_location: 'Türkiye',
+          scrape_name: 'akbank',
+        });
+      }
     }
     const [button] = await page.$x(`//a[text()="${pageNumber + 1}"]`);
     if (button === undefined) {
       break;
     }
     await button.click();
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(3000);
     pageNumber++;
   }
   await browser.close();

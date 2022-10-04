@@ -43,12 +43,16 @@ export const iyzico = async () => {
           .trim(),
       jbCard,
     );
-    jobs.push({
-      job_link,
-      job_title,
-      job_location,
-      scrape_name: 'iyzico',
-    });
+    let isExist = jobs.find((job) => job.job_link === job_link);
+
+    if (!isExist) {
+      jobs.push({
+        job_link,
+        job_title,
+        job_location,
+        scrape_name: 'iyzico',
+      });
+    }
   }
   await browser.close();
   return jobs;

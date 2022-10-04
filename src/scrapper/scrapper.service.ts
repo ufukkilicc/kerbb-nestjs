@@ -29,6 +29,18 @@ import { UpdateScrapperDto } from './dto/update-scrapper.dto';
 import { Scrapper } from './entitiy/scrapper.entitiy';
 import { vodafone } from 'src/scrappers/scrapper_vodafone';
 import { turkhavayollari } from 'src/scrappers/scrapper_turkhavayollari';
+import { vakifkatilim } from 'src/scrappers/scrapper_vakitkatilim';
+import { kuveytturk } from 'src/scrappers/scrapper_kuveytturk';
+import { redbull } from 'src/scrappers/scrapper_redbull';
+import { baykar } from 'src/scrappers/scrapper_baykar';
+import { binance } from 'src/scrappers/scrapper_binance';
+import { apple } from 'src/scrappers/scrapper_apple';
+import { samsung } from 'src/scrappers/scrapper_samsung';
+import { mastercard } from 'src/scrappers/scrapper_mastercard';
+import { peak } from 'src/scrappers/scrapper_peak';
+import { danone } from 'src/scrappers/scrapper_danone';
+import { loreal } from 'src/scrappers/scrapper_loreal';
+import { bosh } from 'src/scrappers/scrapper_bosh';
 
 @Injectable()
 export class ScrapperService {
@@ -73,6 +85,7 @@ export class ScrapperService {
       state: '',
     };
     let companies = await this.companiesService.findAll(query);
+    console.log(companies.length);
     while (companies.length !== 0) {
       companies = await this.companiesService.findAll(query);
       query.page += 1;
@@ -236,11 +249,87 @@ export class ScrapperService {
         );
         return await this.create(scrapper_vodafone);
       case 'turkhavayollari':
-        const scrapper_turkhavayollari = await this.scrapperHelperService.runScrapper(
-          'turkhavayollari',
-          turkhavayollari,
-        );
+        const scrapper_turkhavayollari =
+          await this.scrapperHelperService.runScrapper(
+            'turkhavayollari',
+            turkhavayollari,
+          );
         return await this.create(scrapper_turkhavayollari);
+      case 'vakifkatilim':
+        const scrapper_vakifkatilim =
+          await this.scrapperHelperService.runScrapper(
+            'vakifkatilim',
+            vakifkatilim,
+          );
+        return await this.create(scrapper_vakifkatilim);
+      case 'kuveytturk':
+        const scrapper_kuveytturk =
+          await this.scrapperHelperService.runScrapper(
+            'kuveytturk',
+            kuveytturk,
+          );
+        return await this.create(scrapper_kuveytturk);
+      case 'redbull':
+        const scrapper_redbull = await this.scrapperHelperService.runScrapper(
+          'redbull',
+          redbull,
+        );
+        return await this.create(scrapper_redbull);
+      case 'baykar':
+        const scrapper_baykar = await this.scrapperHelperService.runScrapper(
+          'baykar',
+          baykar,
+        );
+        return await this.create(scrapper_baykar);
+      case 'binance':
+        const scrapper_binance = await this.scrapperHelperService.runScrapper(
+          'binance',
+          binance,
+        );
+        return await this.create(scrapper_binance);
+      case 'apple':
+        const scrapper_apple = await this.scrapperHelperService.runScrapper(
+          'apple',
+          apple,
+        );
+        return await this.create(scrapper_apple);
+      case 'samsung':
+        const scrapper_samsung = await this.scrapperHelperService.runScrapper(
+          'samsung',
+          samsung,
+        );
+        return await this.create(scrapper_samsung);
+      case 'mastercard':
+        const scrapper_mastercard =
+          await this.scrapperHelperService.runScrapper(
+            'mastercard',
+            mastercard,
+          );
+        return await this.create(scrapper_mastercard);
+      case 'peak':
+        const scrapper_peak = await this.scrapperHelperService.runScrapper(
+          'peak',
+          peak,
+        );
+        return await this.create(scrapper_peak);
+      case 'danone':
+        const scrapper_danone = await this.scrapperHelperService.runScrapper(
+          'danone',
+          danone,
+        );
+        return await this.create(scrapper_danone);
+      case 'loreal':
+        const scrapper_loreal = await this.scrapperHelperService.runScrapper(
+          'loreal',
+          loreal,
+        );
+        return await this.create(scrapper_loreal);
+      case 'bosh':
+        const scrapper_bosh = await this.scrapperHelperService.runScrapper(
+          'bosh',
+          bosh,
+        );
+        return await this.create(scrapper_bosh);
       default:
         let scrapper: Scrapper;
         return scrapper;

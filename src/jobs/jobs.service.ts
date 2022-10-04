@@ -25,8 +25,8 @@ export class JobsService {
   generalSearchQuery = {
     page: 1,
     size: 10,
-    sort: 'ASC',
-    sort_by: 'job_title',
+    sort: 'DESC',
+    sort_by: 'date',
     query_text: '',
     location_query_text: '',
     search_title_by: 'job_title',

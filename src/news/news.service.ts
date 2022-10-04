@@ -139,26 +139,74 @@ export class NewsService {
         return await ex;
       }
     }
-    // let result;
-    // try {
-    //   await cloudinary.v2.uploader.upload(
-    //     file.path,
-    //     function (error, response) {
-    //       result = response;
-    //       return response;
-    //     },
-    //   );
-    //   console.log(result);
-    //   return await result;
-    // } catch (ex) {
-    //   return await ex;
-    // }
-  }
-  async updateImage(id: string, imageUrl: string, publicId: string) {
+  }async updateImage(id: string, imageUrl: string, publicId: string) {
     return await this.newsModel
       .findByIdAndUpdate(
         { _id: id },
         { image_url: imageUrl, image_public_id: publicId },
+        { new: true },
+      )
+      .populate('news_tags')
+      .populate('news_publisher')
+      .exec();
+  }
+  async uploadImageSecondary(file: any, id: string): Promise<any> {
+    console.log("hey")
+    const company = await this.findOne(id);
+    let result;
+    if (company.image_url_secondary !== '') {
+      try {
+        const cloudDeleteResponse = await cloudinary.v2.uploader.destroy(
+          company.image_public_id_secondary,
+          function (error, response) {
+            return response;
+          },
+        );
+        const cloudResponse = await cloudinary.v2.uploader.upload(
+          file.path,
+          {
+            folder: 'local/news_thumbnails',
+          },
+          function (error, response) {
+            return response;
+          },
+        );
+        fs.unlinkSync(file.path);
+        return await this.updateImageSecondary(
+          id,
+          cloudResponse.url,
+          cloudResponse.public_id,
+        );
+      } catch (ex) {
+        return await ex;
+      }
+    } else {
+      try {
+        const cloudResponse = await cloudinary.v2.uploader.upload(
+          file.path,
+          {
+            folder: 'local/news_thumbnails',
+          },
+          function (error, response) {
+            return response;
+          },
+        );
+        fs.unlinkSync(file.path);
+        return await this.updateImageSecondary(
+          id,
+          cloudResponse.url,
+          cloudResponse.public_id,
+        );
+      } catch (ex) {
+        return await ex;
+      }
+    }
+  }
+  async updateImageSecondary(id: string, imageUrl: string, publicId: string) {
+    return await this.newsModel
+      .findByIdAndUpdate(
+        { _id: id },
+        { image_url_secondary: imageUrl, image_public_id_secondary: publicId },
         { new: true },
       )
       .populate('news_tags')

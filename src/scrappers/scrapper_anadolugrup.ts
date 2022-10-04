@@ -45,14 +45,17 @@ export const anadolugrup = async () => {
           .trim(),
       jbCard,
     );
-    jobs.push({
-      job_link,
-      job_title,
-      job_location: job_location
-        .replace('TR', 'Türkiye')
-        .replace('(Anadolu)', 'Anadolu'),
-      scrape_name: 'anadolugrup',
-    });
+    let isExist = jobs.find((job) => job.job_link === job_link);
+    if (!isExist) {
+      jobs.push({
+        job_link,
+        job_title,
+        job_location: job_location
+          .replace('TR', 'Türkiye')
+          .replace('(Anadolu)', 'Anadolu'),
+        scrape_name: 'anadolugrup',
+      });
+    }
   }
   await browser.close();
   return jobs;

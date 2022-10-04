@@ -45,14 +45,18 @@ export const turkcell = async () => {
             .trim(),
         jbCard,
       );
-      jobs.push({
-        job_link,
-        job_title,
-        job_location:
-          job_location.toLowerCase().charAt(0).toUpperCase() +
-          job_location.toLowerCase().slice(1),
-        scrape_name: 'turkcell',
-      });
+      let isExist = jobs.find((job) => job.job_link === job_link);
+
+      if (!isExist) {
+        jobs.push({
+          job_link,
+          job_title,
+          job_location:
+            job_location.toLowerCase().charAt(0).toUpperCase() +
+            job_location.toLowerCase().slice(1),
+          scrape_name: 'turkcell',
+        });
+      }
     }
     pageEnd = (await page.$(`[data-pagenumber="${pageNumber + 1}"]`)) === null;
     if (pageEnd) {

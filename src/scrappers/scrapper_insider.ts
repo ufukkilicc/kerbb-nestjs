@@ -40,7 +40,9 @@ export const insider = async () => {
           .trim(),
       jbCard,
     );
-    if (job_location.includes('Türkiye')) {
+    let isExist = jobs.find((job) => job.job_link === job_link);
+
+    if (job_location.includes('Türkiye') && !isExist) {
       jobs.push({
         job_link,
         job_title,

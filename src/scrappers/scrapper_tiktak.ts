@@ -38,13 +38,16 @@ export const tiktak = async () => {
           .trim(),
       jbCard,
     );
-    console.log({ job_link, job_title, job_location });
-    jobs.push({
-      job_link,
-      job_title,
-      job_location,
-      scrape_name: 'tiktak',
-    });
+    let isExist = jobs.find((job) => job.job_link === job_link);
+
+    if (!isExist) {
+      jobs.push({
+        job_link,
+        job_title,
+        job_location,
+        scrape_name: 'tiktak',
+      });
+    }
   }
   await browser.close();
   return jobs;
