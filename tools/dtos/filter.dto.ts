@@ -35,6 +35,9 @@ export class FilterDto {
   @IsBoolean()
   is_highlighted: boolean;
   @IsOptional()
+  @IsBoolean()
+  document_count: boolean;
+  @IsOptional()
   @IsString()
   date: string;
 }

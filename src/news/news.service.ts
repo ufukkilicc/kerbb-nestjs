@@ -18,12 +18,15 @@ export class NewsService {
     size: 10,
     sort: 'DESC',
     sort_by: 'news_date',
+    query_text: '',
   };
   async findAll(query?: NewsFilterDto) {
     if (Object.keys(query).length !== 0) {
       const searchValue = await { ...this.generalSearchQuery, ...query };
+      const userRegex = new RegExp(searchValue.query_text.trim(), 'i');
+      console.log(userRegex);
       return this.newsModel
-        .find()
+        .find({ news_title: userRegex })
         .limit(Math.max(0, searchValue.size))
         .skip(searchValue.size * (searchValue.page - 1))
         .sort([[`${searchValue.sort_by}`, searchValue.sort]])
@@ -139,7 +142,8 @@ export class NewsService {
         return await ex;
       }
     }
-  }async updateImage(id: string, imageUrl: string, publicId: string) {
+  }
+  async updateImage(id: string, imageUrl: string, publicId: string) {
     return await this.newsModel
       .findByIdAndUpdate(
         { _id: id },
@@ -151,7 +155,7 @@ export class NewsService {
       .exec();
   }
   async uploadImageSecondary(file: any, id: string): Promise<any> {
-    console.log("hey")
+    console.log('hey');
     const company = await this.findOne(id);
     let result;
     if (company.image_url_secondary !== '') {

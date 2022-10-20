@@ -36,9 +36,11 @@ export class JobsService {
     search_date_by: 'date',
     is_highlighted: false,
     search_highlighted_by: 'is_highlighted',
+    document_count: false,
     date: 'whole',
   };
   async findAll(query?: FilterDto) {
+    console.log(query);
     if (Object.keys(query).length !== 0) {
       const searchValue = await { ...this.generalSearchQuery, ...query };
       const userRegex = new RegExp(searchValue.query_text.trim(), 'i');
@@ -50,8 +52,6 @@ export class JobsService {
       const sevenDays = theNow.setDate(theNow.getDate() - 7);
       const oneMonth = theNow.setDate(theNow.getDate() - 30);
 
-      console.log({ theNow, threeHours, twentyFourHours, sevenDays });
-      console.log({ searchValue });
       if (searchValue.is_highlighted) {
         return await this.jobModel
           .find({})
@@ -76,15 +76,134 @@ export class JobsService {
           ])
           .sort({
             [searchValue.sort_by]: searchValue.sort === 'ASC' ? 'asc' : 'desc',
+            _id: -1,
           })
           .limit(Math.max(0, searchValue.size))
           .skip(searchValue.size * (searchValue.page - 1))
           .populate([{ path: 'job_tags', populate: 'tag_type' }])
           .populate('job_company')
           .exec();
+      } else if (searchValue.document_count) {
+        if (searchValue.date === 'three-hours') {
+          return await this.jobModel
+            .find({})
+            .and([
+              {
+                $or: [
+                  {
+                    [searchValue.search_title_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_company_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_scrape_by]: userRegex,
+                  },
+                ],
+              },
+              { [searchValue.search_location_by]: locationRegex },
+              {
+                [searchValue.search_date_by]: { $gt: threeHours },
+              },
+            ])
+            .countDocuments()
+            .exec();
+        } else if (searchValue.date === 'twenty-four-hours') {
+          return await this.jobModel
+            .find({})
+            .and([
+              {
+                $or: [
+                  {
+                    [searchValue.search_title_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_company_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_scrape_by]: userRegex,
+                  },
+                ],
+              },
+              { [searchValue.search_location_by]: locationRegex },
+              {
+                [searchValue.search_date_by]: { $gt: twentyFourHours },
+              },
+            ])
+            .countDocuments()
+            .exec();
+        } else if (searchValue.date === 'seven-days') {
+          return await this.jobModel
+            .find({})
+            .and([
+              {
+                $or: [
+                  {
+                    [searchValue.search_title_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_company_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_scrape_by]: userRegex,
+                  },
+                ],
+              },
+              { [searchValue.search_location_by]: locationRegex },
+              {
+                [searchValue.search_date_by]: { $gt: sevenDays },
+              },
+            ])
+            .countDocuments()
+            .exec();
+        } else if (searchValue.date === 'one-month') {
+          return await this.jobModel
+            .find({})
+            .and([
+              {
+                $or: [
+                  {
+                    [searchValue.search_title_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_company_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_scrape_by]: userRegex,
+                  },
+                ],
+              },
+              { [searchValue.search_location_by]: locationRegex },
+              {
+                [searchValue.search_date_by]: { $gt: oneMonth },
+              },
+            ])
+            .countDocuments()
+            .exec();
+        } else if (searchValue.date === 'whole') {
+          return await this.jobModel
+            .find()
+            .and([
+              {
+                $or: [
+                  {
+                    [searchValue.search_title_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_company_by]: userRegex,
+                  },
+                  {
+                    [searchValue.search_scrape_by]: userRegex,
+                  },
+                ],
+              },
+              { [searchValue.search_location_by]: locationRegex },
+            ])
+            .countDocuments()
+            .exec();
+        }
       } else {
         if (searchValue.date === 'three-hours') {
-          console.log('three-hours');
           return await this.jobModel
             .find({})
             .and([
@@ -109,6 +228,7 @@ export class JobsService {
             .sort({
               [searchValue.sort_by]:
                 searchValue.sort === 'ASC' ? 'asc' : 'desc',
+              _id: -1,
             })
             .limit(Math.max(0, searchValue.size))
             .skip(searchValue.size * (searchValue.page - 1))
@@ -116,7 +236,6 @@ export class JobsService {
             .populate('job_company')
             .exec();
         } else if (searchValue.date === 'twenty-four-hours') {
-          console.log('twenty-four-hours');
           return await this.jobModel
             .find({})
             .and([
@@ -141,6 +260,7 @@ export class JobsService {
             .sort({
               [searchValue.sort_by]:
                 searchValue.sort === 'ASC' ? 'asc' : 'desc',
+              _id: -1,
             })
             .limit(Math.max(0, searchValue.size))
             .skip(searchValue.size * (searchValue.page - 1))
@@ -148,7 +268,6 @@ export class JobsService {
             .populate('job_company')
             .exec();
         } else if (searchValue.date === 'seven-days') {
-          console.log('seven-days');
           return await this.jobModel
             .find({})
             .and([
@@ -173,6 +292,7 @@ export class JobsService {
             .sort({
               [searchValue.sort_by]:
                 searchValue.sort === 'ASC' ? 'asc' : 'desc',
+              _id: -1,
             })
             .limit(Math.max(0, searchValue.size))
             .skip(searchValue.size * (searchValue.page - 1))
@@ -180,7 +300,6 @@ export class JobsService {
             .populate('job_company')
             .exec();
         } else if (searchValue.date === 'one-month') {
-          console.log('one-month');
           return await this.jobModel
             .find({})
             .and([
@@ -205,6 +324,7 @@ export class JobsService {
             .sort({
               [searchValue.sort_by]:
                 searchValue.sort === 'ASC' ? 'asc' : 'desc',
+              _id: -1,
             })
             .limit(Math.max(0, searchValue.size))
             .skip(searchValue.size * (searchValue.page - 1))
@@ -212,9 +332,8 @@ export class JobsService {
             .populate('job_company')
             .exec();
         } else if (searchValue.date === 'whole') {
-          console.log('whole');
           return await this.jobModel
-            .find({})
+            .find()
             .and([
               {
                 $or: [
@@ -234,6 +353,7 @@ export class JobsService {
             .sort({
               [searchValue.sort_by]:
                 searchValue.sort === 'ASC' ? 'asc' : 'desc',
+              _id: -1,
             })
             .limit(Math.max(0, searchValue.size))
             .skip(searchValue.size * (searchValue.page - 1))

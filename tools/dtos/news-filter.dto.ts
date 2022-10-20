@@ -13,4 +13,7 @@ export class NewsFilterDto {
   @IsOptional()
   @IsString()
   sort_by: string;
+  @IsOptional()
+  @IsString()
+  query_text: string;
 }
