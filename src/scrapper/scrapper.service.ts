@@ -82,6 +82,7 @@ export class ScrapperService {
       search_highlighted_by: 'is_highlighted',
       is_highlighted: false,
       is_active: true,
+      document_count: false,
       state: '',
     };
     let companies = await this.companiesService.findAll(query);

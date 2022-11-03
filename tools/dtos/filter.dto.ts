@@ -21,6 +21,9 @@ export class FilterDto {
   location_query_text: string;
   @IsOptional()
   @IsString()
+  company_query_text: string;
+  @IsOptional()
+  @IsString()
   search_title_by: string;
   @IsOptional()
   @IsString()

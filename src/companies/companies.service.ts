@@ -37,6 +37,7 @@ export class CompaniesService {
     search_highlighted_by: 'is_highlighted',
     search_active_by: 'is_active',
     is_highlighted: false,
+    document_count: false,
     is_active: false,
     state: '',
   };
@@ -87,10 +88,10 @@ export class CompaniesService {
           })
           .exec();
       } else if (searchValue.is_active) {
-        return await this.companyModel
-          .aggregate()
-          .match({
-            $or: [
+        if (searchValue.document_count) {
+          return [await this.companyModel
+            .find({})
+            .or([
               {
                 $and: [
                   {
@@ -111,19 +112,48 @@ export class CompaniesService {
                   },
                 ],
               },
-            ],
-          })
-          .sort(`${searchValue.sort_by}`)
-          .skip(searchValue.size * (searchValue.page - 1))
-          .limit(Math.max(0, searchValue.size))
-          .lookup({
-            from: 'jobs',
-            localField: 'scrape_name',
-            foreignField: 'scrape_name',
-            as: 'highlighted_jobs',
-            pipeline: [{ $sort: { date: -1 } }, { $limit: 2 }],
-          })
-          .exec();
+            ])
+            .countDocuments()
+            .exec()];
+        } else {
+          return await this.companyModel
+            .aggregate()
+            .match({
+              $or: [
+                {
+                  $and: [
+                    {
+                      [searchValue.search_name_by]: userRegex,
+                    },
+                    {
+                      [searchValue.search_active_by]: searchValue.is_active,
+                    },
+                  ],
+                },
+                {
+                  $and: [
+                    {
+                      [searchValue.search_scrape_by]: userRegex,
+                    },
+                    {
+                      [searchValue.search_active_by]: searchValue.is_active,
+                    },
+                  ],
+                },
+              ],
+            })
+            .sort(`${searchValue.sort_by}`)
+            .skip(searchValue.size * (searchValue.page - 1))
+            .limit(Math.max(0, searchValue.size))
+            .lookup({
+              from: 'jobs',
+              localField: 'scrape_name',
+              foreignField: 'scrape_name',
+              as: 'highlighted_jobs',
+              pipeline: [{ $sort: { date: -1 } }, { $limit: 2 }],
+            })
+            .exec();
+        }
       } else if (searchValue.state === 'active') {
         return await this.companyModel
           .aggregate()

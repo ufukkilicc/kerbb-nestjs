@@ -32,12 +32,9 @@ export class CompanyFilterDto {
   @IsBoolean()
   is_active: boolean;
   @IsOptional()
+  @IsBoolean()
+  document_count: boolean;
+  @IsOptional()
   @IsString()
   state: string;
 }
-
-const optionalBooleanMapper = new Map([
-  ['undefined', undefined],
-  ['true', true],
-  ['false', false],
-]);
