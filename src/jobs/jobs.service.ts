@@ -29,6 +29,7 @@ export class JobsService {
     sort_by: 'date',
     query_text: '',
     location_query_text: '',
+    company_query_text: '',
     search_title_by: 'job_title',
     search_location_by: 'job_location',
     search_company_by: 'company',
@@ -45,7 +46,8 @@ export class JobsService {
       const searchValue = await { ...this.generalSearchQuery, ...query };
       const userRegex = new RegExp(searchValue.query_text.trim(), 'i');
       const locationRegex = new RegExp(searchValue.location_query_text, 'i');
-
+      const companyRegex = new RegExp(searchValue.company_query_text, 'i');
+      console.log(companyRegex);
       const theNow = nowDateTurkey();
       const threeHours = theNow.setHours(theNow.getHours() - 3);
       const twentyFourHours = theNow.setHours(theNow.getHours() - 24);
@@ -105,6 +107,9 @@ export class JobsService {
               {
                 [searchValue.search_date_by]: { $gt: threeHours },
               },
+              {
+                [searchValue.search_company_by]: companyRegex,
+              },
             ])
             .countDocuments()
             .exec();
@@ -128,6 +133,9 @@ export class JobsService {
               { [searchValue.search_location_by]: locationRegex },
               {
                 [searchValue.search_date_by]: { $gt: twentyFourHours },
+              },
+              {
+                [searchValue.search_company_by]: companyRegex,
               },
             ])
             .countDocuments()
@@ -153,6 +161,9 @@ export class JobsService {
               {
                 [searchValue.search_date_by]: { $gt: sevenDays },
               },
+              {
+                [searchValue.search_company_by]: companyRegex,
+              },
             ])
             .countDocuments()
             .exec();
@@ -177,6 +188,9 @@ export class JobsService {
               {
                 [searchValue.search_date_by]: { $gt: oneMonth },
               },
+              {
+                [searchValue.search_company_by]: companyRegex,
+              },
             ])
             .countDocuments()
             .exec();
@@ -198,6 +212,9 @@ export class JobsService {
                 ],
               },
               { [searchValue.search_location_by]: locationRegex },
+              {
+                [searchValue.search_company_by]: companyRegex,
+              },
             ])
             .countDocuments()
             .exec();
@@ -224,6 +241,9 @@ export class JobsService {
               {
                 [searchValue.search_date_by]: { $gt: threeHours },
               },
+              {
+                [searchValue.search_company_by]: companyRegex,
+              },
             ])
             .sort({
               [searchValue.sort_by]:
@@ -255,6 +275,9 @@ export class JobsService {
               { [searchValue.search_location_by]: locationRegex },
               {
                 [searchValue.search_date_by]: { $gt: twentyFourHours },
+              },
+              {
+                [searchValue.search_company_by]: companyRegex,
               },
             ])
             .sort({
@@ -288,6 +311,9 @@ export class JobsService {
               {
                 [searchValue.search_date_by]: { $gt: sevenDays },
               },
+              {
+                [searchValue.search_company_by]: companyRegex,
+              },
             ])
             .sort({
               [searchValue.sort_by]:
@@ -320,6 +346,9 @@ export class JobsService {
               {
                 [searchValue.search_date_by]: { $gt: oneMonth },
               },
+              {
+                [searchValue.search_company_by]: companyRegex,
+              },
             ])
             .sort({
               [searchValue.sort_by]:
@@ -332,6 +361,7 @@ export class JobsService {
             .populate('job_company')
             .exec();
         } else if (searchValue.date === 'whole') {
+          console.log('yea');
           return await this.jobModel
             .find()
             .and([
@@ -349,6 +379,9 @@ export class JobsService {
                 ],
               },
               { [searchValue.search_location_by]: locationRegex },
+              {
+                [searchValue.search_company_by]: companyRegex,
+              },
             ])
             .sort({
               [searchValue.sort_by]:
