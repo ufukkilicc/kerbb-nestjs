@@ -41,13 +41,12 @@ export class JobsService {
     date: 'whole',
   };
   async findAll(query?: FilterDto) {
-    console.log(query);
     if (Object.keys(query).length !== 0) {
       const searchValue = await { ...this.generalSearchQuery, ...query };
       const userRegex = new RegExp(searchValue.query_text.trim(), 'i');
       const locationRegex = new RegExp(searchValue.location_query_text, 'i');
       const companyRegex = new RegExp(searchValue.company_query_text, 'i');
-      console.log(companyRegex);
+      (companyRegex);
       const theNow = nowDateTurkey();
       const threeHours = theNow.setHours(theNow.getHours() - 3);
       const twentyFourHours = theNow.setHours(theNow.getHours() - 24);
@@ -361,7 +360,7 @@ export class JobsService {
             .populate('job_company')
             .exec();
         } else if (searchValue.date === 'whole') {
-          console.log('yea');
+          ('yea');
           return await this.jobModel
             .find()
             .and([

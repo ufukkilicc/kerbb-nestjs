@@ -72,11 +72,11 @@ export class AuthService {
         );
       }
     } catch (error) {
-      console.log(error);
+      (error);
     }
   }
   async updateProfile(userId, updateUserDto: UpdateUserDto) {
-    console.log(userId);
+    (userId);
     const user = await this.usersService.findOne(userId);
     if (updateUserDto.user_name) {
       user.user_name = updateUserDto.user_name;

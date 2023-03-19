@@ -22,7 +22,7 @@ export class EmailService {
         payload: payload,
       },
     });
-    console.log(mailResponse);
+    (mailResponse);
     return mailResponse;
   }
 }

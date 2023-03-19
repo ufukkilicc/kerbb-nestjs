@@ -12,8 +12,8 @@ const dateHelper = function () {
   });
 
   const [dateValues, timeValues] = str.split(' ');
-  // console.log(dateValues); // 👉️ "09/24/2022"
-  // console.log(timeValues); // 👉️ "07:30:14"
+  // (dateValues); // 👉️ "09/24/2022"
+  // (timeValues); // 👉️ "07:30:14"
 
   const [day, month, year] = dateValues.split('.');
   const [hours, minutes, seconds] = timeValues.split(':');
@@ -133,7 +133,7 @@ export class ScrapperHelperService {
       return createScrapperDto;
     } catch (error) {
       this.success = false;
-      console.log(error.stack);
+      (error.stack);
       this.error_message = `${error}`;
       const companies = await this.companyModel.find({ scrape_name: title });
       const company = companies[0];

@@ -55,7 +55,7 @@ export const vodafone = async () => {
         { timeout: 5000 },
       );
     } catch {
-      (err) => console.log(err);
+      (err) => (err);
     }
   }
   while (true) {

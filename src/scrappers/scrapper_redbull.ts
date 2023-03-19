@@ -43,7 +43,7 @@ export const redbull = async () => {
   }
 
   let jobCards = await page.$$('a.JobCard_job-card__1UUOz');
-  console.log(jobCards.length);
+  (jobCards.length);
   for (const jbCard of jobCards) {
     const job_link = await page.evaluate((el) => el.href, jbCard);
     const job_title = await page.evaluate(

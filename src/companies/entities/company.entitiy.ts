@@ -61,8 +61,8 @@ export class Company extends Document {
       });
 
       const [dateValues, timeValues] = str.split(' ');
-      console.log(dateValues); // 👉️ "09/24/2022"
-      console.log(timeValues); // 👉️ "07:30:14"
+      (dateValues); // 👉️ "09/24/2022"
+      (timeValues); // 👉️ "07:30:14"
 
       const [day, month, year] = dateValues.split('.');
       const [hours, minutes, seconds] = timeValues.split(':');

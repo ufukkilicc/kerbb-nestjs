@@ -24,7 +24,7 @@ export class NewsService {
     if (Object.keys(query).length !== 0) {
       const searchValue = await { ...this.generalSearchQuery, ...query };
       const userRegex = new RegExp(searchValue.query_text.trim(), 'i');
-      console.log(userRegex);
+      (userRegex);
       return this.newsModel
         .find({ news_title: userRegex })
         .limit(Math.max(0, searchValue.size))
@@ -155,7 +155,7 @@ export class NewsService {
       .exec();
   }
   async uploadImageSecondary(file: any, id: string): Promise<any> {
-    console.log('hey');
+    ('hey');
     const company = await this.findOne(id);
     let result;
     if (company.image_url_secondary !== '') {

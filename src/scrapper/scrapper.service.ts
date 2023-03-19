@@ -86,12 +86,12 @@ export class ScrapperService {
       state: '',
     };
     let companies = await this.companiesService.findAll(query);
-    console.log(companies.length);
+    (companies.length);
     while (companies.length !== 0) {
       companies = await this.companiesService.findAll(query);
       query.page += 1;
       const response = await this.asyncForEach(companies, (err, response) => {
-        console.log(err);
+        (err);
       });
 
       response.forEach((scrapper) => {
