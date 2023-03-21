@@ -18,6 +18,10 @@ export class Company extends Document {
   job_count: number;
   @Prop({ type: mongoose.Schema.Types.Number, required: false, default: 0 })
   redirect_count: number;
+  @Prop({ type: mongoose.Schema.Types.Number, required: false })
+  staff_count: number;
+  @Prop({ type: mongoose.Schema.Types.String, required: false })
+  sector: string;
   @Prop({
     type: mongoose.Schema.Types.Boolean,
     required: false,
@@ -61,8 +65,8 @@ export class Company extends Document {
       });
 
       const [dateValues, timeValues] = str.split(' ');
-      (dateValues); // 👉️ "09/24/2022"
-      (timeValues); // 👉️ "07:30:14"
+      dateValues; // 👉️ "09/24/2022"
+      timeValues; // 👉️ "07:30:14"
 
       const [day, month, year] = dateValues.split('.');
       const [hours, minutes, seconds] = timeValues.split(':');

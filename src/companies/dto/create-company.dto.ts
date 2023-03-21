@@ -19,6 +19,12 @@ export class CreateCompanyDto {
   @IsNumber()
   readonly job_count: number;
   @IsOptional()
+  @IsNumber()
+  readonly staff_count: number;
+  @IsOptional()
+  @IsString()
+  readonly sector: string;
+  @IsOptional()
   @IsBoolean()
   readonly is_highlighted: boolean;
   @IsString()
