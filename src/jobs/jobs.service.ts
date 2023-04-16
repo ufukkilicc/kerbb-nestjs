@@ -46,7 +46,7 @@ export class JobsService {
       const userRegex = new RegExp(searchValue.query_text.trim(), 'i');
       const locationRegex = new RegExp(searchValue.location_query_text, 'i');
       const companyRegex = new RegExp(searchValue.company_query_text, 'i');
-      (companyRegex);
+      companyRegex;
       const theNow = nowDateTurkey();
       const threeHours = theNow.setHours(theNow.getHours() - 3);
       const twentyFourHours = theNow.setHours(theNow.getHours() - 24);

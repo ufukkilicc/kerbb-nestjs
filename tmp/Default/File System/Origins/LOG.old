@@ -1,2 +1,3 @@
-2023/03/16-20:11:06.471 23a Archiving /usr/src/app/tmp/Default/File System/Origins/MANIFEST-000001: OK
-2023/03/16-20:11:06.527 23a **** Repaired leveldb /usr/src/app/tmp/Default/File System/Origins; recovered 0 files; 0 bytes. Some data may have been lost. ****
+2023/04/12-19:01:41.228 23c Reusing MANIFEST /usr/src/app/tmp/Default/File System/Origins/MANIFEST-000001
+2023/04/12-19:01:41.267 23c Recovering log #2
+2023/04/12-19:01:41.272 23c Reusing old log /usr/src/app/tmp/Default/File System/Origins/000002.log 

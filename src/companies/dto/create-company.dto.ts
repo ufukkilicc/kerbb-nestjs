@@ -32,5 +32,8 @@ export class CreateCompanyDto {
   readonly image_url: string;
   @IsString()
   @IsOptional()
+  readonly about: string;
+  @IsString()
+  @IsOptional()
   readonly image_public_id: string;
 }

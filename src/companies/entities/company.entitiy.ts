@@ -22,6 +22,8 @@ export class Company extends Document {
   staff_count: number;
   @Prop({ type: mongoose.Schema.Types.String, required: false })
   sector: string;
+  @Prop({ type: mongoose.Schema.Types.String, required: false })
+  about: string;
   @Prop({
     type: mongoose.Schema.Types.Boolean,
     required: false,
