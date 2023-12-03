@@ -19,12 +19,12 @@ import { ScrapperService } from './scrapper.service';
 export class ScrapperController {
   constructor(private readonly scrapperService: ScrapperService) {}
 
-  @Roles('Admin')
+  // @Roles('Admin')
   @Get('/scrape-all')
   async scrapeAll() {
     return await this.scrapperService.scrapeAll();
   }
-  @Roles('Admin')
+  // @Roles('Admin')
   @Get(':scrapper')
   scrapeOne(@Param('scrapper') scrapper: string) {
     return this.scrapperService.scrapeOne(scrapper, false);
@@ -33,17 +33,17 @@ export class ScrapperController {
   findAll(@Query() query: ScrapperFilterDto) {
     return this.scrapperService.findAll(query);
   }
-  @Roles('Admin')
+  // @Roles('Admin')
   @Get('/one/:id')
   findOne(@Param('id') id: string) {
     return this.scrapperService.findOne(id);
   }
-  @Roles('Admin')
+  // @Roles('Admin')
   @Post()
   create(@Body() createScrapperDto: CreateScrapperDto) {
     return this.scrapperService.create(createScrapperDto);
   }
-  @Roles('Admin')
+  // @Roles('Admin')
   @Patch(':id')
   update(
     @Param('id') id: string,
@@ -51,12 +51,12 @@ export class ScrapperController {
   ) {
     return this.scrapperService.update(id, updateScrapperDto);
   }
-  @Roles('Admin')
+  // @Roles('Admin')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.scrapperService.remove(id);
   }
-  @Roles('Admin')
+  // @Roles('Admin')
   @Delete()
   removeAll() {
     return this.scrapperService.removeAll();

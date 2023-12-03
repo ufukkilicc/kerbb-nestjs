@@ -42,12 +42,10 @@ export class CompaniesController {
     const company = await this.companiesService.findOne(id);
     return await company;
   }
-  @Roles('Admin')
   @Post()
   create(@Body() createJobDto: CreateCompanyDto) {
     return this.companiesService.create(createJobDto);
   }
-  @Roles('Admin')
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateJobDto: UpdateCompanyDto) {
     return this.companiesService.update(id, updateJobDto);
@@ -56,17 +54,14 @@ export class CompaniesController {
   incrementView(@Param('id') id: string) {
     return this.companiesService.incrementView(id);
   }
-  @Roles('Admin')
   @Patch(':id/approve-refuse')
   approveCompany(@Param('id') id: string) {
     return this.companiesService.approveCompany(id);
   }
-  @Roles('Admin')
   @Patch(':id/highlight')
   highlightCompany(@Param('id') id: string) {
     return this.companiesService.highlightCompany(id);
   }
-  @Roles('Admin')
   @Patch(':id/highlight-order')
   highlightOrderCompany(
     @Param('id') id: string,
@@ -74,17 +69,14 @@ export class CompaniesController {
   ) {
     return this.companiesService.highlightOrderCompany(id, highlightOrder);
   }
-  @Roles('Admin')
   @Patch(':id/activate-deactivate')
   activateCompany(@Param('id') id: string) {
     return this.companiesService.activateCompany(id);
   }
-  @Roles('Admin')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.companiesService.remove(id);
   }
-  @Roles('Admin')
   @Delete()
   removeAll() {
     return this.companiesService.removeAll();

@@ -37,35 +37,52 @@ export class AuthService {
             is_admin = true;
           }
         });
-        if (is_admin) {
-          const match = await bcrypt.compareSync(
-            `${process.env.HASH_TEXT}${authLoginDto.user_password}`,
-            existing_user.user_password,
+          const auth_json_webtoken = jwt.sign(
+            { user: existing_user },
+            process.env.JWT_TEXT,
           );
-          if (match) {
-            const auth_json_webtoken = jwt.sign(
-              { user: existing_user },
-              process.env.JWT_TEXT,
-            );
-            const user = await this.userModel
-              .findOne({
-                user_email: existing_user.user_email,
-              })
-              .select('-user_password')
-              .populate([
-                { path: 'user_roles' },
-                { path: 'user_groups', populate: 'group_roles' },
-              ]);
-            return await {
-              user: user,
-              token: auth_json_webtoken,
-            };
-          } else {
-            return new BadRequestException(`User password is not correct`);
-          }
-        } else {
-          return new UnauthorizedException(`Only admins can access this site`);
-        }
+          const user = await this.userModel
+            .findOne({
+              user_email: existing_user.user_email,
+            })
+            .select('-user_password')
+            .populate([
+              { path: 'user_roles' },
+              { path: 'user_groups', populate: 'group_roles' },
+            ]);
+          return await {
+            user: user,
+            token: auth_json_webtoken,
+          };
+        // if (is_admin) {
+        //   const match = await bcrypt.compareSync(
+        //     `${process.env.HASH_TEXT}${authLoginDto.user_password}`,
+        //     existing_user.user_password,
+        //   );
+        //   if (match) {
+        //     const auth_json_webtoken = jwt.sign(
+        //       { user: existing_user },
+        //       process.env.JWT_TEXT,
+        //     );
+        //     const user = await this.userModel
+        //       .findOne({
+        //         user_email: existing_user.user_email,
+        //       })
+        //       .select('-user_password')
+        //       .populate([
+        //         { path: 'user_roles' },
+        //         { path: 'user_groups', populate: 'group_roles' },
+        //       ]);
+        //     return await {
+        //       user: user,
+        //       token: auth_json_webtoken,
+        //     };
+        //   } else {
+        //     return new BadRequestException(`User password is not correct`);
+        //   }
+        // } else {
+        //   return new UnauthorizedException(`Only admins can access this site`);
+        // }
       } else {
         return new BadRequestException(
           `User with email ${authLoginDto.user_email} not found`,

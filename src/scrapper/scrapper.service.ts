@@ -41,6 +41,9 @@ import { peak } from 'src/scrappers/scrapper_peak';
 import { danone } from 'src/scrappers/scrapper_danone';
 import { loreal } from 'src/scrappers/scrapper_loreal';
 import { bosh } from 'src/scrappers/scrapper_bosh';
+import { enuygun } from 'src/scrappers/scraper_enuygun';
+import { philipmorris } from 'src/scrappers/scraper_philipmorris';
+import { alternatifbank } from 'src/scrappers/scraper_alternatifbank';
 
 @Injectable()
 export class ScrapperService {
@@ -194,6 +197,13 @@ export class ScrapperService {
             emlakkatilim,
           );
         return await this.create(scrapper_emlakkatilim);
+      case 'enuygun':
+        const scrapper_enuygun =
+          await this.scrapperHelperService.runScrapper(
+            'enuygun',
+            enuygun,
+          );
+        return await this.create(scrapper_enuygun);
       case 'acibadem':
         const scrapper_acibadem = await this.scrapperHelperService.runScrapper(
           'acibadem',
@@ -307,6 +317,18 @@ export class ScrapperService {
             mastercard,
           );
         return await this.create(scrapper_mastercard);
+      case 'philipmorris':
+        const scrapper_philipmorris = await this.scrapperHelperService.runScrapper(
+          'philipmorris',
+          philipmorris,
+        );
+        return await this.create(scrapper_philipmorris);
+      case 'alternatifbank':
+        const scrapper_alternatifbanks = await this.scrapperHelperService.runScrapper(
+          'alternatifbank',
+          alternatifbank,
+        );
+        return await this.create(scrapper_alternatifbanks);
       case 'peak':
         const scrapper_peak = await this.scrapperHelperService.runScrapper(
           'peak',
