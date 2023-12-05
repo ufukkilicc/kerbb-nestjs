@@ -139,6 +139,7 @@ export class ScrapperService {
         const scrapperDeleteResponse = await this.remove(scrapper._id);
       }
     }
+    console.log("heheye")
     switch (companyName) {
       case 'getir':
         const scrapper_getir = await this.scrapperHelperService.runScrapper(
@@ -198,6 +199,7 @@ export class ScrapperService {
           );
         return await this.create(scrapper_emlakkatilim);
       case 'enuygun':
+        console.log(3)
         const scrapper_enuygun =
           await this.scrapperHelperService.runScrapper(
             'enuygun',
@@ -318,12 +320,14 @@ export class ScrapperService {
           );
         return await this.create(scrapper_mastercard);
       case 'philipmorris':
+        console.log(2)
         const scrapper_philipmorris = await this.scrapperHelperService.runScrapper(
           'philipmorris',
           philipmorris,
         );
         return await this.create(scrapper_philipmorris);
       case 'alternatifbank':
+        console.log(1)
         const scrapper_alternatifbanks = await this.scrapperHelperService.runScrapper(
           'alternatifbank',
           alternatifbank,

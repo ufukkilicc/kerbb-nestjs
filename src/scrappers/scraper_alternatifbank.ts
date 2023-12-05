@@ -1,6 +1,7 @@
 const puppeteer = require('puppeteer');
 
 export const alternatifbank = async () => {
+  console.log("alternatifbank")
   const browser = await puppeteer.launch({
     executablePath: '/usr/bin/chromium-browser',
     args: [

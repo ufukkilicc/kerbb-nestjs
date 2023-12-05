@@ -94,35 +94,4 @@ import { PublisherModule } from './publisher/publisher.module';
     // }
   ],
 })
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(TokenMiddleware)
-      .exclude(
-        { path: 'jobs', method: RequestMethod.GET },
-        { path: 'jobs/:id', method: RequestMethod.GET },
-        { path: 'jobs/:id/inc-view', method: RequestMethod.PATCH },
-        { path: 'companies/:id', method: RequestMethod.GET },
-        { path: 'companies', method: RequestMethod.GET },
-        { path: 'companies/:id/inc-view', method: RequestMethod.PATCH },
-        // { path: 'companies/:id/download', method: RequestMethod.GET },
-        { path: 'news', method: RequestMethod.GET },
-        { path: 'news/:id', method: RequestMethod.GET },
-        { path: 'news/:id/inc-view', method: RequestMethod.PATCH },
-        { path: 'users', method: RequestMethod.GET },
-        { path: 'auth/forgot-password', method: RequestMethod.POST },
-        { path: 'auth/reset-password', method: RequestMethod.PATCH },
-        { path: 'users/:id', method: RequestMethod.GET },
-        { path: 'scrapper', method: RequestMethod.GET },
-        { path: 'tickets', method: RequestMethod.GET },
-        { path: 'ticket-types', method: RequestMethod.GET },
-        { path: 'tags', method: RequestMethod.GET },
-        { path: 'tag-types', method: RequestMethod.GET },
-        { path: 'role', method: RequestMethod.GET },
-        { path: 'publisher', method: RequestMethod.GET },
-        { path: 'publisher/:id', method: RequestMethod.GET },
-        { path: 'total', method: RequestMethod.GET },
-      )
-      .forRoutes('*');
-  }
-}
+export class AppModule { }

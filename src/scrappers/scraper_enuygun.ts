@@ -9,6 +9,7 @@ declare var window: {
 };
 
 export const enuygun = async () => {
+  console.log("enuygun")
   const browser = await puppeteer.launch({
     executablePath: '/usr/bin/chromium-browser',
     args: [
